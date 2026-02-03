@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>es.um.atica</groupId>
+		<artifactId>fundewebjs-api-parent</artifactId>
+		<version>1.0.3</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<groupId>es.um.atica</groupId>
+	<artifactId>umufly-api</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>umufly-api</name>
+	<description>API que ofrece operaciones de gestión de vuelos y reservas</description>
+	<properties>
+		<java.version>11</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+	<dependencies>
+		<!-- INICIO Dependencias fwjs -->
+		<dependency>
+			<groupId>es.um.atica</groupId>
+			<artifactId>fundewebjs-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>es.um.atica.fundewebjs</groupId>
+			<artifactId>fundewebjs-umubus</artifactId>
+		</dependency>
+		<!-- FIN Dependencias fwjs -->
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.hibernate.orm.tooling</groupId>
+				<artifactId>hibernate-enhance-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	<repositories>
+		<repository>
+			<id>fundewebjs-archiva</id>
+			<name>ATICA - UMU Repository - FundeWebJS</name>
+			<url>https://archiva.um.es/archiva/repository/FundeWebJS/</url>
+		</repository>
+	</repositories>
+
+</project>

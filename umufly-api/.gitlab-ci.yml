@@ -1,0 +1,7 @@
+variables:
+  PROJECT_NAME: umuflyAPI
+
+ 
+include:
+  - project: 'umugit/atica/desarrollo/common/mncs-pipelines'
+    file: 'gitlab-ci-spring-template-v3.yml'
