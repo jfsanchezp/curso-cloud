@@ -3,9 +3,8 @@ package es.um.atica.umufly.vuelos.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import es.um.atica.fundewebjs.umubus.domain.model.AggregateRoot;
-
-public class ReservaVuelo extends AggregateRoot {
+// Agregado raíz
+public class ReservaVuelo {
 
 	private static final int MAX_RESERVAS_POR_PASAJERO_EN_VUELO = 1;
 
