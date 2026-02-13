@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
+import es.um.atica.umufly.vuelos.domain.model.Pasajero;
+import es.um.atica.umufly.vuelos.domain.model.ReservaVuelo;
 
 public interface ReservasVueloRepository {
 
@@ -19,5 +21,30 @@ public interface ReservasVueloRepository {
 	 *         vuelo; solo se incluyen los vuelos para los que el pasajero tiene una reserva activa
 	 */
 	Map<UUID, UUID> findReservaIdByVueloIdAndPasajero( DocumentoIdentidad documentoIdentidadPasajero, List<UUID> vueloIds );
+
+	/**
+	 * Método que cuenta las reservas de vuelo que tiene un pasajero en un vuelo concreto.
+	 *
+	 * @param idVuelo
+	 * @param pasajero
+	 * @return
+	 */
+	int countReservasByIdVueloAndPasajero( UUID idVuelo, Pasajero pasajero );
+
+	/**
+	 * Método que persiste una reserva de vuelo.
+	 *
+	 * @param reservaVuelo
+	 */
+	void persistirReserva( ReservaVuelo reservaVuelo );
+
+
+	/**
+	 * Método que persiste la formalización de la reserva de vuelo.
+	 *
+	 * @param idReserva
+	 * @param idReservaFormalizada
+	 */
+	void persistirFormalizacionReserva( UUID idReserva, UUID idReservaFormalizada );
 
 }

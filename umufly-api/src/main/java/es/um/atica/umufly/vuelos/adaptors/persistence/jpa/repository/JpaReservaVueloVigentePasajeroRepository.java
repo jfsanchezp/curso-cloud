@@ -10,4 +10,5 @@ import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.TipoDocumentoEn
 public interface JpaReservaVueloVigentePasajeroRepository extends JpaRepository<ReservaVueloVigentePasajeroViewEntity, String> {
 
 	List<ReservaVueloVigentePasajeroViewEntity> findByNumeroDocumentoAndTipoDocumentoAndIdVueloIn( String numeroDocumento, TipoDocumentoEnum tipoDocumento, Iterable<String> idsVuelo );
+
 }

@@ -6,13 +6,26 @@ import java.util.UUID;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.validation.constraints.NotNull;
+
 @Relation( collectionRelation = "vuelos", itemRelation = "vuelo" )
 public class VueloDTO extends RepresentationModel<VueloDTO> {
 
+	@NotNull
 	private UUID id;
+
+	@JsonProperty( access = JsonProperty.Access.READ_ONLY )
 	private ItinerarioDTO itinerario;
+
+	@JsonProperty( access = JsonProperty.Access.READ_ONLY )
 	private TipoVuelo tipo;
+
+	@JsonProperty( access = JsonProperty.Access.READ_ONLY )
 	private EstadoVuelo estado;
+
+	@JsonProperty( access = JsonProperty.Access.READ_ONLY )
 	private AvionDTO avion;
 
 	public VueloDTO( UUID id, ItinerarioDTO itinerario, TipoVuelo tipo, EstadoVuelo estado, AvionDTO avion ) {
@@ -75,7 +88,7 @@ public class VueloDTO extends RepresentationModel<VueloDTO> {
 		if ( this == obj ) {
 			return true;
 		}
-		if ( !super.equals( obj ) || ( getClass() != obj.getClass() ) ) {
+		if ( !super.equals( obj ) || getClass() != obj.getClass() ) {
 			return false;
 		}
 		VueloDTO other = ( VueloDTO ) obj;

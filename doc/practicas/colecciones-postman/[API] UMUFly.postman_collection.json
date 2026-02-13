@@ -128,7 +128,7 @@
           "response": []
         },
         {
-          "name": "[v2] [private] [detalle] reservas-vuelo",
+          "name": "[v2] [private] [detalle] vuelo",
           "request": {
             "method": "GET",
             "header": [
@@ -138,6 +138,117 @@
                 "type": "text"
               }
             ],
+            "url": {
+              "raw": "http://{{apium.host}}/private/v2.0/vuelos/:idVuelo",
+              "protocol": "http",
+              "host": [
+                "{{apium.host}}"
+              ],
+              "path": [
+                "private",
+                "v2.0",
+                "vuelos",
+                ":idVuelo"
+              ],
+              "variable": [
+                {
+                  "key": "idVuelo",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "reservas-vuelo",
+      "item": [
+        {
+          "name": "[v2] [private] [crear] reservas-vuelo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "UMU-Usuario",
+                "value": "[tipo_documento]:[numero_documento]",
+                "description": "tipo_documento: NIF, NIE, PASAPORTE\nnumero_documento: Identificador con letra",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"vuelo\": {\r\n        \"id\": \"4a1859b8-e4ac-20b2-e063-0205400a3969\" // Obligatorio\r\n    },\r\n    \"pasajero\": {\r\n        \"documentoIdentidad\": {\r\n            \"tipo\": \"NIF\",\r\n            \"numero\": \"62904837K\"\r\n        },\r\n        \"nombre\": \"PASAJERO\", // Obligatorio\r\n        \"primerApellido\": \"APELLIDO1\", // Obligatorio\r\n        \"segundoApellido\": \"APELLIDO2\", // Opcional\r\n        \"correoElectronico\": \"prueba@gmail.com\", // Obligatorio\r\n        \"nacionalidad\": \"ESP\" // Obligatorio\r\n    },\r\n    \"claseAsiento\": \"ECONOMICA\" // Obligatorio\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{apium.host}}/private/v2.0/reservas-vuelo",
+              "protocol": "http",
+              "host": [
+                "{{apium.host}}"
+              ],
+              "path": [
+                "private",
+                "v2.0",
+                "reservas-vuelo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[v2] [private] [cancelar] reservas-vuelo",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "UMU-Usuario",
+                "value": "[tipo_documento]:[numero_documento]",
+                "description": "tipo_documento: NIF, NIE, PASAPORTE\nnumero_documento: Identificador con letra",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"vuelo\": {\r\n        \"id\": \"4a1859b8-e4b1-20b2-e063-0205400a3969\" // Obligatorio\r\n    },\r\n    \"pasajero\": {\r\n        \"documentoIdentidad\": {\r\n            \"tipo\": \"NIF\",\r\n            \"numero\": \"48705663N\"\r\n        },\r\n        \"nombre\": \"JUAN FRANCISCO\", // Obligatorio\r\n        \"primerApellido\": \"SÁNCHEZ\", // Obligatorio\r\n        \"segundoApellido\": \"PEÑALVER\", // Opcional\r\n        \"correoElectronico\": \"prueba@gmail.com\", // Obligatorio\r\n        \"nacionalidad\": \"ESP\" // Obligatorio\r\n    },\r\n    \"claseAsiento\": \"ECONOMICA\" // Obligatorio\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
               "raw": "http://{{apium.host}}/private/v2.0/reservas-vuelo/:idReserva",
               "protocol": "http",
