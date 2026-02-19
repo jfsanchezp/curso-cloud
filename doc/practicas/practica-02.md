@@ -58,13 +58,13 @@ Dentro de ella, los casos de uso estarán bajo `es.um.atica.umufly.vuelos.applic
 
 En nuestro caso, para obtener el listado de vuelos, crearemos el paquete:
 
-`es.um.atica.umufly.vuelos.application.usecase.getvuelos`
+`es.um.atica.umufly.vuelos.application.usecase.vuelos`
 
-Dentro de este paquete crearemos la clase `GetVuelosUseCase`, que contendrá la lógica del caso de uso.
+Dentro de este paquete crearemos la clase `VuelosUseCase`, que contendrá la lógica del caso de uso.
 
 ``` java
 @Component
-public class GetVuelosUseCase {
+public class VuelosUseCase {
 
 	public Page<Vuelo> getVuelos(int pagina, int tamanioPagina ) {
     // 1. Obtenemos y devolveremos el listado de vuelos 
@@ -96,11 +96,11 @@ public interface VuelosRepository {
 Ahora tendríamos que actualizar el caso de uso para utilizar este puerto.
 ``` java
 @Component
-public class GetVuelosUseCase {
+public class VuelosUseCase {
 
   private final VuelosRepository vuelosRepository;
 
-	public GetVuelosUseCase( VuelosRepository vuelosRepository ) {
+	public VuelosUseCase( VuelosRepository vuelosRepository ) {
 		this.vuelosRepository = vuelosRepository;
 	}
 
@@ -422,14 +422,14 @@ Es importante remarcar que el controlador REST no contiene lógica de negocio. �
 @RestController
 public class VuelosEndpoint {
 
-    private final GetVuelosUseCase getVuelosUseCase;
+    private final VuelosUseCase vuelosUseCase;
     private final VuelosModelAssembler vuelosModelAssembler;
     private final PagedResourcesAssembler<Vuelo> pagedResourcesAssembler;
 
-    public VuelosEndpoint(GetVuelosUseCase getVuelosUseCase,
+    public VuelosEndpoint(VuelosUseCase vuelosUseCase,
                           VuelosModelAssembler vuelosModelAssembler,
                           PagedResourcesAssembler<Vuelo> pagedResourcesAssembler) {
-        this.getVuelosUseCase = getVuelosUseCase;
+        this.vuelosUseCase = vuelosUseCase;
         this.vuelosModelAssembler = vuelosModelAssembler;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
@@ -440,7 +440,7 @@ public class VuelosEndpoint {
             @RequestParam(value = "size", defaultValue = "25") int size) {
 
         return pagedResourcesAssembler.toModel(
-                getVuelosUseCase.getVuelos(page, size),
+                vuelosUseCase.getVuelos(page, size),
                 vuelosModelAssembler
         );
     }
@@ -571,12 +571,12 @@ Ya tenemos definidos los puertos que necesita el caso de uso, ahora tenemos que 
 
 ``` java
 @Component
-public class GetVuelosUseCase {
+public class VuelosUseCase {
 
     private final VuelosRepository vuelosRepository;
     private final ReservasVueloRepository reservasVueloRepository;
 
-    public GetVuelosUseCase(VuelosRepository vuelosRepository,
+    public VuelosUseCase(VuelosRepository vuelosRepository,
                             ReservasVueloRepository reservasVueloRepository) {
         this.vuelosRepository = vuelosRepository;
         this.reservasVueloRepository = reservasVueloRepository;
@@ -858,17 +858,17 @@ En sesiones posteriores veremos mecanismos más seguros para autenticación y au
 @RestController
 public class VuelosEndpointV2 {
 
-	private final GetVuelosUseCase getVuelosUseCase;
+	private final VuelosUseCase vuelosUseCase;
 	private final VuelosModelAssemblerV2 vuelosModelAssembler;
 	private final PagedResourcesAssembler<VueloAmpliadoDTO> pagedResourcesAssembler;
 	private final AuthService authService;
 
 	public VuelosEndpointV2(
-			GetVuelosUseCase getVuelosUseCase,
+			VuelosUseCase vuelosUseCase,
 			VuelosModelAssemblerV2 vuelosModelAssembler,
 			PagedResourcesAssembler<VueloAmpliadoDTO> pagedResourcesAssembler,
 			AuthService authService ) {
-		this.getVuelosUseCase = getVuelosUseCase;
+		this.vuelosUseCase = vuelosUseCase;
 		this.vuelosModelAssembler = vuelosModelAssembler;
 		this.pagedResourcesAssembler = pagedResourcesAssembler;
 		this.authService = authService;
@@ -882,7 +882,7 @@ public class VuelosEndpointV2 {
 
 		DocumentoIdentidad documento = authService.parseUserHeader( usuario );
 		return pagedResourcesAssembler.toModel(
-				getVuelosUseCase.getVuelos( documento, page, size ),
+				vuelosUseCase.getVuelos( documento, page, size ),
 				vuelosModelAssembler
 		);
 	}
