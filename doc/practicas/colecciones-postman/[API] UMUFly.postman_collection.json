@@ -1,0 +1,378 @@
+{
+  "info": {
+    "_postman_id": "67dbd169-f4f9-4f26-9d72-152483425f5e",
+    "name": "UMUFly - API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "10176396"
+  },
+  "item": [
+    {
+      "name": "pruebas",
+      "item": [
+        {
+          "name": "[private] pruebas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{apium.host}}/private/v1.0/pruebas",
+              "protocol": "http",
+              "host": [
+                "{{apium.host}}"
+              ],
+              "path": [
+                "private",
+                "v1.0",
+                "pruebas"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "vuelos",
+      "item": [
+        {
+          "name": "[v1] [private] [listado] vuelos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{apium.host}}/private/v1.0/vuelos?page=0&size=10",
+              "protocol": "http",
+              "host": [
+                "{{apium.host}}"
+              ],
+              "path": [
+                "private",
+                "v1.0",
+                "vuelos"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[v2] [private] [listado] vuelos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "UMU-Usuario",
+                "value": "[tipo_documento]:[numero_documento]",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://{{apium.host}}/private/v2.0/vuelos?page=0&size=10",
+              "protocol": "http",
+              "host": [
+                "{{apium.host}}"
+              ],
+              "path": [
+                "private",
+                "v2.0",
+                "vuelos"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[v2] [private] [detalle] vuelo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "UMU-Usuario",
+                "value": "[tipo_documento]:[numero_documento]",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://{{apium.host}}/private/v2.0/vuelos/:idVuelo",
+              "protocol": "http",
+              "host": [
+                "{{apium.host}}"
+              ],
+              "path": [
+                "private",
+                "v2.0",
+                "vuelos",
+                ":idVuelo"
+              ],
+              "variable": [
+                {
+                  "key": "idVuelo",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "reservas-vuelo",
+      "item": [
+        {
+          "name": "[v2] [private] [crear] reservas-vuelo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "UMU-Usuario",
+                "value": "[tipo_documento]:[numero_documento]",
+                "description": "tipo_documento: NIF, NIE, PASAPORTE\nnumero_documento: Identificador con letra",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"vuelo\": {\r\n        \"id\": \"4a1859b8-e4ac-20b2-e063-0205400a3969\" // Obligatorio\r\n    },\r\n    \"pasajero\": {\r\n        \"documentoIdentidad\": {\r\n            \"tipo\": \"NIF\",\r\n            \"numero\": \"62904837K\"\r\n        },\r\n        \"nombre\": \"PASAJERO\", // Obligatorio\r\n        \"primerApellido\": \"APELLIDO1\", // Obligatorio\r\n        \"segundoApellido\": \"APELLIDO2\", // Opcional\r\n        \"correoElectronico\": \"prueba@gmail.com\", // Obligatorio\r\n        \"nacionalidad\": \"ESP\" // Obligatorio\r\n    },\r\n    \"claseAsiento\": \"ECONOMICA\" // Obligatorio\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{apium.host}}/private/v2.0/reservas-vuelo",
+              "protocol": "http",
+              "host": [
+                "{{apium.host}}"
+              ],
+              "path": [
+                "private",
+                "v2.0",
+                "reservas-vuelo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[v2] [private] [cancelar] reservas-vuelo",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "UMU-Usuario",
+                "value": "[tipo_documento]:[numero_documento]",
+                "description": "tipo_documento: NIF, NIE, PASAPORTE\nnumero_documento: Identificador con letra",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"vuelo\": {\r\n        \"id\": \"4a1859b8-e4b1-20b2-e063-0205400a3969\" // Obligatorio\r\n    },\r\n    \"pasajero\": {\r\n        \"documentoIdentidad\": {\r\n            \"tipo\": \"NIF\",\r\n            \"numero\": \"48705663N\"\r\n        },\r\n        \"nombre\": \"JUAN FRANCISCO\", // Obligatorio\r\n        \"primerApellido\": \"SÁNCHEZ\", // Obligatorio\r\n        \"segundoApellido\": \"PEÑALVER\", // Opcional\r\n        \"correoElectronico\": \"prueba@gmail.com\", // Obligatorio\r\n        \"nacionalidad\": \"ESP\" // Obligatorio\r\n    },\r\n    \"claseAsiento\": \"ECONOMICA\" // Obligatorio\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{apium.host}}/private/v2.0/reservas-vuelo/:idReserva",
+              "protocol": "http",
+              "host": [
+                "{{apium.host}}"
+              ],
+              "path": [
+                "private",
+                "v2.0",
+                "reservas-vuelo",
+                ":idReserva"
+              ],
+              "variable": [
+                {
+                  "key": "idReserva",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "state",
+        "value": "{{$randomUUID}}",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://{{api.auth.impersonate.host}}/cas/oidc/accessToken",
+        "type": "string"
+      },
+      {
+        "key": "useBrowser",
+        "value": true,
+        "type": "boolean"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://{{api.auth.impersonate.host}}/cas/oidc/authorize",
+        "type": "string"
+      },
+      {
+        "key": "scope",
+        "value": "{{api.auth.scope}}",
+        "type": "string"
+      },
+      {
+        "key": "clientId",
+        "value": "{{api.auth.client}}",
+        "type": "string"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://{{api.auth.callback.host}}/mncs/api-umu/login",
+        "type": "string"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code_with_pkce",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
