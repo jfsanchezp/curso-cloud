@@ -1,7 +1,7 @@
-# curso-cloud-admin
+# curso-cloud
 
-Repositorio interno de **curso-cloud**.
+Repositorio de **curso-cloud**.
 
 Contiene:
-- la documentaciÛn del curso (teorÌa y pr·cticas)
-- el proyecto Java del caso pr·ctico **UMUFly**
+- la documentaci√≥n del curso (teor√≠a y pr√°cticas)
+- el proyecto Java del caso pr√°ctico **UMUFly**
