@@ -3,5 +3,5 @@
 Repositorio interno de **curso-cloud**.
 
 Contiene:
-- la documentaci√≥n del curso (teor√≠a y pr√°cticas)
-- el proyecto Java del caso pr√°ctico **UMUFly**
+- la documentaciÛn del curso (teorÌa y pr·cticas)
+- el proyecto Java del caso pr·ctico **UMUFly**

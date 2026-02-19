@@ -3,6 +3,11 @@ package es.um.atica.umufly.vuelos.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import es.um.atica.umufly.vuelos.domain.exception.LimiteReservasPorPasajeroEnVueloSuperadoException;
+import es.um.atica.umufly.vuelos.domain.exception.VueloIniciadoException;
+import es.um.atica.umufly.vuelos.domain.exception.VueloNoReservableException;
+import es.um.atica.umufly.vuelos.domain.exception.VueloSinPlazasException;
+
 // Agregado raíz
 public class ReservaVuelo {
 
@@ -97,20 +102,21 @@ public class ReservaVuelo {
 	 * @return
 	 */
 	public static ReservaVuelo solicitarReserva( DocumentoIdentidad identificadorTitular, Pasajero pasajero, Vuelo vuelo, ClaseAsientoReserva clase, LocalDateTime fechaReserva, int numeroReservasPasajeroEnVuelo, int numeroPlazasDisponiblesEnAvion ) {
-		// TODO: Implementar operación
-		return null;
+		if ( numeroReservasPasajeroEnVuelo >= MAX_RESERVAS_POR_PASAJERO_EN_VUELO ) {
+			throw new LimiteReservasPorPasajeroEnVueloSuperadoException( "Sólo puede haber una reserva por pasajero en un vuelo" );
+		}
+		if ( EstadoVuelo.CANCELADO.equals( vuelo.getEstado() ) || EstadoVuelo.COMPLETADO.equals( vuelo.getEstado() ) ) {
+			throw new VueloNoReservableException( "El vuelo se encuentra completado o cancelado" );
+		}
+		if ( vuelo.isIniciado( fechaReserva ) ) {
+			throw new VueloIniciadoException( "El vuelo se encuentra iniciado" );
+		}
+		if ( numeroPlazasDisponiblesEnAvion <= 0 ) {
+			throw new VueloSinPlazasException( "No hay plazas disponibles en el avión" );
+		}
+		return of( UUID.randomUUID(), identificadorTitular, pasajero, vuelo, clase, fechaReserva, EstadoReserva.PENDIENTE );
 	}
-
-	/**
-	 * Método que formaliza una reserva de vuelo. Añadirá la fecha en la que se ha formalizado la reserva de vuelo y
-	 * cambiará el estado a ACTIVA.
-	 *
-	 * @param fechaReserva
-	 */
-	public void formalizarReserva( LocalDateTime fechaReserva ) {
-		// TODO: Implementar operación
-	}
-
+	
 	/**
 	 * Método para cancelar una reserva de vuelo. Las restricciones que se aplicaran para cancelar una reserva de vuelo son
 	 * las siguientes:
