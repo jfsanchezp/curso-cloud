@@ -1,4 +1,4 @@
-package es.um.atica.umufly.vuelos.application.usecase.creareserva;
+package es.um.atica.umufly.vuelos.application.usecase.reservas;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -16,14 +16,14 @@ import es.um.atica.umufly.vuelos.domain.model.ReservaVuelo;
 import es.um.atica.umufly.vuelos.domain.model.Vuelo;
 
 @Component
-public class CreaReservaUseCase {
+public class GestionarReservaUseCase {
 
 	private final VuelosRepository vuelosRepository;
 	private final ReservasVueloRepository reservasVueloRepository;
 	private final FormalizacionReservasVueloPort formalizacionReservasVueloPort;
 	private final Clock clock;
 
-	public CreaReservaUseCase( VuelosRepository vuelosRepository, ReservasVueloRepository reservasVueloRepository, FormalizacionReservasVueloPort formalizacionReservasVueloPort, Clock clock ) {
+	public GestionarReservaUseCase( VuelosRepository vuelosRepository, ReservasVueloRepository reservasVueloRepository, FormalizacionReservasVueloPort formalizacionReservasVueloPort, Clock clock ) {
 		this.vuelosRepository = vuelosRepository;
 		this.reservasVueloRepository = reservasVueloRepository;
 		this.formalizacionReservasVueloPort = formalizacionReservasVueloPort;

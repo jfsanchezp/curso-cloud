@@ -11,32 +11,32 @@ import es.um.atica.umufly.vuelos.domain.model.Pasajero;
 import es.um.atica.umufly.vuelos.domain.model.ReservaVuelo;
 import es.um.atica.umufly.vuelos.domain.model.TipoDocumento;
 
-public final class ReservaVueloMapper {
+public final class MuchoVueloMapper {
 
-	private ReservaVueloMapper() {
+	private MuchoVueloMapper() {
 		throw new IllegalStateException( "Clase de conversión" );
 	}
 
-	public static ReservaVueloDTO reservaVueloModelToDTO( ReservaVuelo reserva ) {
+	public static ReservaVueloDTO reservaToDTO( ReservaVuelo reserva ) {
 
 		ReservaVueloDTO dto = new ReservaVueloDTO();
 
-		dto.setTipoDocumentoTitular( tipoDocumentoModelToDTO( reserva.getIdentificadorTitular().tipo() ) );
+		dto.setTipoDocumentoTitular( tipoDocumentoToDTO( reserva.getIdentificadorTitular().tipo() ) );
 		dto.setNumeroDocumentoTitular( reserva.getIdentificadorTitular().identificador() );
 
 		dto.setIdVuelo( reserva.getVuelo().getId() );
-		dto.setClaseAsientoReserva( claseAsientoModelToDTO( reserva.getClase() ) );
+		dto.setClaseAsientoReserva( claseAsientoToDTO( reserva.getClase() ) );
 
-		dto.setPasajeros( List.of( pasajeroModelToDTO( reserva.getPasajero() ) ) );
+		dto.setPasajeros( List.of( pasajeroToDTO( reserva.getPasajero() ) ) );
 
 		return dto;
 	}
 
-	private static PasajeroDTO pasajeroModelToDTO( Pasajero pasajero ) {
+	private static PasajeroDTO pasajeroToDTO( Pasajero pasajero ) {
 
 		PasajeroDTO dto = new PasajeroDTO();
 
-		dto.setTipoDocumento( tipoDocumentoModelToDTO( pasajero.getIdentificador().tipo() ) );
+		dto.setTipoDocumento( tipoDocumentoToDTO( pasajero.getIdentificador().tipo() ) );
 		dto.setNumeroDocumento( pasajero.getIdentificador().identificador() );
 
 		dto.setNombre( pasajero.getNombre().nombre() );
@@ -49,7 +49,7 @@ public final class ReservaVueloMapper {
 		return dto;
 	}
 
-	private static TipoDocumentoDTO tipoDocumentoModelToDTO( TipoDocumento tipo ) {
+	private static TipoDocumentoDTO tipoDocumentoToDTO( TipoDocumento tipo ) {
 		return switch ( tipo ) {
 			case NIF -> TipoDocumentoDTO.NIF;
 			case NIE -> TipoDocumentoDTO.NIE;
@@ -57,7 +57,7 @@ public final class ReservaVueloMapper {
 		};
 	}
 
-	private static ClaseAsiento claseAsientoModelToDTO( ClaseAsientoReserva clase ) {
+	private static ClaseAsiento claseAsientoToDTO( ClaseAsientoReserva clase ) {
 		return switch ( clase ) {
 			case ECONOMICA -> ClaseAsiento.ECONOMICA;
 			case BUSINESS -> ClaseAsiento.BUSINESS;

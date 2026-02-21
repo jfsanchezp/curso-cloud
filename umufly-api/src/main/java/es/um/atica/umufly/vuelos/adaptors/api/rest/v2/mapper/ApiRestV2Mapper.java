@@ -10,6 +10,7 @@ import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.PasajeroDTO;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.ReservaVueloDTO;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.TipoVuelo;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.VueloDTO;
+import es.um.atica.umufly.vuelos.application.dto.VueloAmpliadoDTO;
 import es.um.atica.umufly.vuelos.domain.model.CorreoElectronico;
 import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.domain.model.Nacionalidad;
@@ -19,32 +20,37 @@ import es.um.atica.umufly.vuelos.domain.model.ReservaVuelo;
 import es.um.atica.umufly.vuelos.domain.model.TipoDocumento;
 import es.um.atica.umufly.vuelos.domain.model.Vuelo;
 
-public class ReservaVueloMapper {
+public class ApiRestV2Mapper {
 
-	private ReservaVueloMapper() {
-		throw new IllegalStateException( "Clase de conversión" );
+	private ApiRestV2Mapper() {
+		throw new IllegalArgumentException( "Clase de conversión" );
 	}
 
-	public static Pasajero pasajeroDTOToModel( PasajeroDTO pasajero ) {
+	public static VueloDTO vueloToDTO( VueloAmpliadoDTO vuelo ) {
+		return new VueloDTO( vuelo.getIdVuelo(), new ItinerarioDTO( vuelo.getFechaSalida(), vuelo.getFechaLlegada(), vuelo.getOrigen(), vuelo.getDestino() ), TipoVuelo.valueOf( vuelo.getTipoVuelo() ), EstadoVuelo.valueOf( vuelo.getEstadoVuelo() ),
+				new AvionDTO( vuelo.getCapacidadAvion() ) );
+	}
+
+	public static Pasajero pasajeroToModel( PasajeroDTO pasajero ) {
 		return Pasajero.of( new DocumentoIdentidad( TipoDocumento.valueOf( pasajero.getDocumentoIdentidad().getTipo().toString() ), pasajero.getDocumentoIdentidad().getNumero() ),
 				new NombreCompleto( pasajero.getNombre(), pasajero.getPrimerApellido(), pasajero.getSegundoApellido() ), new CorreoElectronico( pasajero.getCorreoElectronico() ), new Nacionalidad( pasajero.getNacionalidad() ) );
 	}
 
-	public static ReservaVueloDTO reservaVueloRestDTOFromModel( ReservaVuelo reservaVuelo ) {
+	public static ReservaVueloDTO reservaVueloToDTO( ReservaVuelo reservaVuelo ) {
 		ReservaVueloDTO reservaVueloDTO = new ReservaVueloDTO();
 		reservaVueloDTO.setId( reservaVuelo.getId() );
-		reservaVueloDTO.setVuelo( vueloDTOFromModel( reservaVuelo.getVuelo() ) );
-		reservaVueloDTO.setPasajero( pasajeroDTOFromModel( reservaVuelo.getPasajero() ) );
-		reservaVueloDTO.setDocumentoIdentidadTitular( documentoIdentidadDTOFromModel( reservaVuelo.getIdentificadorTitular() ) );
+		reservaVueloDTO.setVuelo( vueloToDTO( reservaVuelo.getVuelo() ) );
+		reservaVueloDTO.setPasajero( pasajeroToDTO( reservaVuelo.getPasajero() ) );
+		reservaVueloDTO.setDocumentoIdentidadTitular( documentoIdentidadToDTO( reservaVuelo.getIdentificadorTitular() ) );
 		reservaVueloDTO.setClaseAsiento( ClaseAsientoReserva.valueOf( reservaVuelo.getClase().toString() ) );
 		reservaVueloDTO.setEstado( EstadoReserva.valueOf( reservaVuelo.getEstado().toString() ) );
 		reservaVueloDTO.setFechaReserva( reservaVuelo.getFechaReserva() );
 		return reservaVueloDTO;
 	}
 
-	private static PasajeroDTO pasajeroDTOFromModel( Pasajero pasajero ) {
+	private static PasajeroDTO pasajeroToDTO( Pasajero pasajero ) {
 		PasajeroDTO pasajeroDTO = new PasajeroDTO();
-		pasajeroDTO.setDocumentoIdentidad( documentoIdentidadDTOFromModel( pasajero.getIdentificador() ) );
+		pasajeroDTO.setDocumentoIdentidad( documentoIdentidadToDTO( pasajero.getIdentificador() ) );
 		pasajeroDTO.setNombre( pasajero.getNombre().nombre() );
 		pasajeroDTO.setPrimerApellido( pasajero.getNombre().primerApellido() );
 		pasajeroDTO.setSegundoApellido( pasajero.getNombre().segundoApellido() );
@@ -53,16 +59,15 @@ public class ReservaVueloMapper {
 		return pasajeroDTO;
 	}
 
-	private static DocumentoIdentidadDTO documentoIdentidadDTOFromModel( DocumentoIdentidad documentoIdentidad ) {
+	private static DocumentoIdentidadDTO documentoIdentidadToDTO( DocumentoIdentidad documentoIdentidad ) {
 		DocumentoIdentidadDTO documentoIdentidadDTO = new DocumentoIdentidadDTO();
 		documentoIdentidadDTO.setTipo( es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.TipoDocumento.valueOf( documentoIdentidad.tipo().toString() ) );
 		documentoIdentidadDTO.setNumero( documentoIdentidad.identificador() );
 		return documentoIdentidadDTO;
 	}
 
-	private static VueloDTO vueloDTOFromModel( Vuelo vv ) {
+	private static VueloDTO vueloToDTO( Vuelo vv ) {
 		return new VueloDTO( vv.getId(), new ItinerarioDTO( vv.getItinerario().salida(), vv.getItinerario().llegada(), vv.getItinerario().origen(), vv.getItinerario().destino() ), TipoVuelo.valueOf( vv.getTipo().toString() ),
 				EstadoVuelo.valueOf( vv.getEstado().toString() ), new AvionDTO( vv.getAvion().capacidad() ) );
 	}
-
 }

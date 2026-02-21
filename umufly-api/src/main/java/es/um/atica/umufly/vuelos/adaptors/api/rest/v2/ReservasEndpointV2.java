@@ -8,28 +8,28 @@ import org.springframework.web.bind.annotation.RestController;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.AuthService;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.Constants;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.ReservaVueloDTO;
-import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.mapper.ReservaVueloMapper;
-import es.um.atica.umufly.vuelos.application.usecase.creareserva.CreaReservaUseCase;
+import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.mapper.ApiRestV2Mapper;
+import es.um.atica.umufly.vuelos.application.usecase.reservas.GestionarReservaUseCase;
 import es.um.atica.umufly.vuelos.domain.model.ClaseAsientoReserva;
 import jakarta.validation.Valid;
 
-@RestController( "v2.reservasEndpoint" )
-public class ReservasEndpoint {
+@RestController
+public class ReservasEndpointV2 {
 
-	private final CreaReservaUseCase creaReservaUseCase;
-	private final ReservasModelAssembler reservasModelAssembler;
+	private final GestionarReservaUseCase gestionarReservaUseCase;
+	private final ReservasModelAssemblerV2 reservasModelAssembler;
 	private final AuthService authService;
 
-	public ReservasEndpoint( CreaReservaUseCase creaReservaUseCase, ReservasModelAssembler reservasModelAssembler, AuthService authService ) {
-		this.creaReservaUseCase = creaReservaUseCase;
+	public ReservasEndpointV2( GestionarReservaUseCase gestionarReservaUseCase, ReservasModelAssemblerV2 reservasModelAssembler, AuthService authService ) {
+		this.gestionarReservaUseCase = gestionarReservaUseCase;
 		this.reservasModelAssembler = reservasModelAssembler;
 		this.authService = authService;
 	}
 
 	@PostMapping( Constants.PRIVATE_PREFIX + Constants.API_VERSION_2 + Constants.RESOURCE_RESERVAS_VUELO )
 	public ReservaVueloDTO creaReserva( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @RequestBody @Valid ReservaVueloDTO nuevaReservaVuelo ) {
-		return reservasModelAssembler.toModel( creaReservaUseCase.creaReservaVuelo( authService.parseUserHeader( usuario ), nuevaReservaVuelo.getVuelo().getId(), ClaseAsientoReserva.valueOf( nuevaReservaVuelo.getClaseAsiento().toString() ),
-				ReservaVueloMapper.pasajeroDTOToModel( nuevaReservaVuelo.getPasajero() ) ) );
+		return reservasModelAssembler.toModel( gestionarReservaUseCase.creaReservaVuelo( authService.parseUserHeader( usuario ), nuevaReservaVuelo.getVuelo().getId(), ClaseAsientoReserva.valueOf( nuevaReservaVuelo.getClaseAsiento().toString() ),
+				ApiRestV2Mapper.pasajeroToModel( nuevaReservaVuelo.getPasajero() ) ) );
 	}
 
 }

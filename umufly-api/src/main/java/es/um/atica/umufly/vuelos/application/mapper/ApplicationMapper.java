@@ -3,17 +3,17 @@ package es.um.atica.umufly.vuelos.application.mapper;
 import java.util.Optional;
 import java.util.UUID;
 
-import es.um.atica.umufly.vuelos.application.dto.VueloAmpliado;
+import es.um.atica.umufly.vuelos.application.dto.VueloAmpliadoDTO;
 import es.um.atica.umufly.vuelos.domain.model.Vuelo;
 
-public class VueloMapper {
+public class ApplicationMapper {
 
-	private VueloMapper() {
+	private ApplicationMapper() {
 		throw new IllegalArgumentException( "Clase de conversión" );
 	}
 
-	public static VueloAmpliado vueloModelToVueloAmpliado( Vuelo v, UUID idReserva ) {
-		VueloAmpliado va = new VueloAmpliado();
+	public static VueloAmpliadoDTO vueloToDTO( Vuelo v, UUID idReserva ) {
+		VueloAmpliadoDTO va = new VueloAmpliadoDTO();
 		va.setIdVuelo( v.getId() );
 		va.setFechaSalida( v.getItinerario().salida() );
 		va.setFechaLlegada( v.getItinerario().llegada() );

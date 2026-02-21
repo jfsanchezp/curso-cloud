@@ -10,27 +10,29 @@ import org.springframework.web.bind.annotation.RestController;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.AuthService;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.Constants;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.VueloDTO;
-import es.um.atica.umufly.vuelos.application.dto.VueloAmpliado;
-import es.um.atica.umufly.vuelos.application.usecase.getvuelos.GetVuelosUseCase;
+import es.um.atica.umufly.vuelos.application.dto.VueloAmpliadoDTO;
+import es.um.atica.umufly.vuelos.application.usecase.vuelos.GestionarVuelosUseCase;
+import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 
-@RestController( "v2.vuelosEndpoint" )
-public class VuelosEndpoint {
+@RestController
+public class VuelosEndpointV2 {
 
-	private final GetVuelosUseCase getVuelosAmpliadosUseCase;
-	private final VuelosModelAssembler vuelosModelAssembler;
-	private final PagedResourcesAssembler<VueloAmpliado> pagedResourcesAssembler;
+	private final GestionarVuelosUseCase gestionarVuelosUseCase;
+	private final VuelosModelAssemblerV2 vuelosModelAssemblerV2;
+	private final PagedResourcesAssembler<VueloAmpliadoDTO> pagedResourcesAssembler;
 	private final AuthService authService;
 
-	public VuelosEndpoint( GetVuelosUseCase getVuelosAmpliadosUseCase, VuelosModelAssembler vuelosModelAssembler, PagedResourcesAssembler<VueloAmpliado> pagedResourcesAssembler, AuthService authService ) {
-		this.getVuelosAmpliadosUseCase = getVuelosAmpliadosUseCase;
-		this.vuelosModelAssembler = vuelosModelAssembler;
+	public VuelosEndpointV2( GestionarVuelosUseCase gestionarVuelosUseCase, VuelosModelAssemblerV2 vuelosModelAssemblerV2, PagedResourcesAssembler<VueloAmpliadoDTO> pagedResourcesAssembler, AuthService authService ) {
+		this.gestionarVuelosUseCase = gestionarVuelosUseCase;
+		this.vuelosModelAssemblerV2 = vuelosModelAssemblerV2;
 		this.pagedResourcesAssembler = pagedResourcesAssembler;
 		this.authService = authService;
 	}
 
 	@GetMapping( Constants.PRIVATE_PREFIX + Constants.API_VERSION_2 + Constants.RESOURCE_VUELOS )
 	public CollectionModel<VueloDTO> getVuelos( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @RequestParam( name = "page", defaultValue = "0" ) int page, @RequestParam( name = "size", defaultValue = "25" ) int size ) {
-		return pagedResourcesAssembler.toModel( getVuelosAmpliadosUseCase.getVuelos( authService.parseUserHeader( usuario ), page, size ), vuelosModelAssembler );
+		DocumentoIdentidad documento = authService.parseUserHeader( usuario );
+		return pagedResourcesAssembler.toModel( gestionarVuelosUseCase.getVuelos( documento, page, size ), vuelosModelAssemblerV2 );
 	}
 
 }

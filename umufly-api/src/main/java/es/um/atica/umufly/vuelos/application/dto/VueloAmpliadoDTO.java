@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-public class VueloAmpliado {
+public class VueloAmpliadoDTO {
 
 	private UUID idVuelo;
 	private LocalDateTime fechaSalida;

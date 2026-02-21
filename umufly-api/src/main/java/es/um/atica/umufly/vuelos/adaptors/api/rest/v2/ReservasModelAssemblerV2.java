@@ -9,21 +9,21 @@ import org.springframework.stereotype.Component;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.Constants;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.LinkService;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.ReservaVueloDTO;
-import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.mapper.ReservaVueloMapper;
+import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.mapper.ApiRestV2Mapper;
 import es.um.atica.umufly.vuelos.domain.model.ReservaVuelo;
 
-@Component( "v2.reservasModelAssembler" )
-public class ReservasModelAssembler implements RepresentationModelAssembler<ReservaVuelo, ReservaVueloDTO> {
+@Component
+public class ReservasModelAssemblerV2 implements RepresentationModelAssembler<ReservaVuelo, ReservaVueloDTO> {
 
 	private final LinkService linkService;
 
-	public ReservasModelAssembler( LinkService linkService ) {
+	public ReservasModelAssemblerV2( LinkService linkService ) {
 		this.linkService = linkService;
 	}
 
 	@Override
 	public ReservaVueloDTO toModel( ReservaVuelo entity ) {
-		ReservaVueloDTO reservaVuelo = ReservaVueloMapper.reservaVueloRestDTOFromModel( entity );
+		ReservaVueloDTO reservaVuelo = ApiRestV2Mapper.reservaVueloToDTO( entity );
 		reservaVuelo.add( linkSelf( entity.getId() ) );
 		return reservaVuelo;
 	}
