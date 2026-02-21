@@ -58,13 +58,13 @@ Dentro de ella, los casos de uso estarán bajo `es.um.atica.umufly.vuelos.applic
 
 En nuestro caso, para obtener el listado de vuelos, crearemos el paquete:
 
-`es.um.atica.umufly.vuelos.application.usecase.getvuelos`
+`es.um.atica.umufly.vuelos.application.usecase.vuelos`
 
-Dentro de este paquete crearemos la clase `GetVuelosUseCase`, que contendrá la lógica del caso de uso.
+Dentro de este paquete crearemos la clase `GestionarVuelosUseCase`, que contendrá la lógica del caso de uso.
 
 ``` java
 @Component
-public class GetVuelosUseCase {
+public class GestionarVuelosUseCase {
 
 	public Page<Vuelo> getVuelos(int pagina, int tamanioPagina ) {
     // 1. Obtenemos y devolveremos el listado de vuelos 
@@ -96,11 +96,11 @@ public interface VuelosRepository {
 Ahora tendríamos que actualizar el caso de uso para utilizar este puerto.
 ``` java
 @Component
-public class GetVuelosUseCase {
+public class GestionarVuelosUseCase {
 
   private final VuelosRepository vuelosRepository;
 
-	public GetVuelosUseCase( VuelosRepository vuelosRepository ) {
+	public GestionarVuelosUseCase( VuelosRepository vuelosRepository ) {
 		this.vuelosRepository = vuelosRepository;
 	}
 
@@ -254,7 +254,7 @@ public class VuelosPersistenceAdapter implements VuelosRepository {
 
 	@Override
 	public Page<Vuelo> findVuelos( int pagina, int tamanioPagina ) {
-		return jpaVueloRepository.findAll( PageRequest.of( pagina, tamanioPagina ) ).map( VueloMapper::vueloEntityToModel );
+		return jpaVueloRepository.findAll( PageRequest.of( pagina, tamanioPagina ) ).map( JpaPersistenceMapper::vueloToModel );
 	}
 }
 ```
@@ -266,13 +266,13 @@ Ahora debemos definir el mapper encargado de traducir las entidades a objetos de
 Y el mapper quedaría:
 
 ``` java
-public class VueloMapper {
+public class JpaPersistenceMapper {
 
-	private VueloMapper() {
+	private JpaPersistenceMapper() {
 		throw new IllegalStateException( "Clase de conversión" );
 	}
 
-	public static Vuelo vueloEntityToModel( VueloExtViewEntity v ) {
+	public static Vuelo vueloToModel( VueloExtViewEntity v ) {
         return Vuelo.of(
                 UUID.fromString(v.getId()),
                 new Itinerario(v.getFechaSalida(), v.getFechaLlegada(), v.getOrigen(), v.getDestino()),
@@ -357,9 +357,9 @@ El mapper lo depositaremos en:
 `es.um.atica.umufly.vuelos.adaptors.api.rest.mapper`
 
 ``` java
-public class VueloMapper {
+public class ApiRestMapper {
 
-	private VueloMapper() {
+	private ApiRestMapper() {
 		throw new IllegalStateException( "Clase de conversión" );
 	}
 
@@ -394,7 +394,7 @@ public class VuelosModelAssembler implements RepresentationModelAssembler<Vuelo,
 
 	@Override
 	public VueloDTO toModel( Vuelo entity ) {
-		return VueloMapper.vueloToDTO( entity );
+		return ApiRestMapper.vueloToDTO( entity );
 	}
 
 }
@@ -422,14 +422,14 @@ Es importante remarcar que el controlador REST no contiene lógica de negocio. �
 @RestController
 public class VuelosEndpoint {
 
-    private final GetVuelosUseCase getVuelosUseCase;
+    private final GestionarVuelosUseCase gestionarVuelosUseCase;
     private final VuelosModelAssembler vuelosModelAssembler;
     private final PagedResourcesAssembler<Vuelo> pagedResourcesAssembler;
 
-    public VuelosEndpoint(GetVuelosUseCase getVuelosUseCase,
+    public VuelosEndpoint(GestionarVuelosUseCase gestionarVuelosUseCase,
                           VuelosModelAssembler vuelosModelAssembler,
                           PagedResourcesAssembler<Vuelo> pagedResourcesAssembler) {
-        this.getVuelosUseCase = getVuelosUseCase;
+        this.gestionarVuelosUseCase = gestionarVuelosUseCase;
         this.vuelosModelAssembler = vuelosModelAssembler;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
@@ -440,7 +440,7 @@ public class VuelosEndpoint {
             @RequestParam(value = "size", defaultValue = "25") int size) {
 
         return pagedResourcesAssembler.toModel(
-                getVuelosUseCase.getVuelos(page, size),
+                gestionarVuelosUseCase.getVuelos(page, size),
                 vuelosModelAssembler
         );
     }
@@ -550,13 +550,13 @@ Devolvemos un `Map<UUID, UUID>` en lugar de una lista de reservas. El caso de us
 Sí. Igual que en los adaptadores, aquí necesitaremos transformar el resultado a un modelo de salida del caso de uso (el DTO de aplicación), que es el que consumirá el adaptador REST. Estará bajo el paquete `es.um.atica.umufly.vuelos.application.mapper`.
 
 ``` java
-public class VueloAmpliadoMapper {
+public class ApplicationMapper {
 
-	private VueloMapper() {
+	private ApplicationMapper() {
 		throw new IllegalStateException( "Clase de conversión" );
 	}
 
-	public static VueloAmpliadoDTO vueloModelToDTO( Vuelo v, UUID idReserva ) {
+	public static VueloAmpliadoDTO vueloToDTO( Vuelo v, UUID idReserva ) {
 		// Conversión a vuelo ampliado
 	}
 }
@@ -571,12 +571,12 @@ Ya tenemos definidos los puertos que necesita el caso de uso, ahora tenemos que 
 
 ``` java
 @Component
-public class GetVuelosUseCase {
+public class GestionarVuelosUseCase {
 
     private final VuelosRepository vuelosRepository;
     private final ReservasVueloRepository reservasVueloRepository;
 
-    public GetVuelosUseCase(VuelosRepository vuelosRepository,
+    public GestionarVuelosUseCase(VuelosRepository vuelosRepository,
                             ReservasVueloRepository reservasVueloRepository) {
         this.vuelosRepository = vuelosRepository;
         this.reservasVueloRepository = reservasVueloRepository;
@@ -589,14 +589,14 @@ public class GetVuelosUseCase {
         Page<Vuelo> vuelos = vuelosRepository.findVuelos(pagina, tamanioPagina);
 
         if (documentoIdentidadPasajero == null) {
-            return vuelos.map(v -> VueloAmpliadoMapper.toDto(v, null));
+            return vuelos.map(v -> ApplicationMapper.vueloToDTO(v, null));
         }
 
         List<UUID> vueloIds = vuelos.getContent().stream().map(Vuelo::getId).toList();
         Map<UUID, UUID> reservaIdPorVueloId =
                 reservasVueloRepository.findReservasActivasPorVuelosYPasajero(documentoIdentidadPasajero, vueloIds);
 
-        return vuelos.map(v -> VueloAmpliadoMapper.vueloModelToDTO(v, reservaIdPorVueloId.get(v.getId())));
+        return vuelos.map(v -> ApplicationMapper.vueloToDTO(v, reservaIdPorVueloId.get(v.getId())));
     }
 }
 ```
@@ -728,7 +728,7 @@ public class ReservasVueloPersistenceAdapter implements ReservasVueloRepository 
 		List<ReservaVueloEntity> reservasVuelo =
 				jpaReservaVueloRepository.findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloInAndEstadoReservaIn(
 						// Tipo de documento de identidad del pasajero convertido
-						ReservaVueloMapper.tipoDocumentoEntityFromModel( documentoIdentidadPasajero.tipo() ),
+						JpaPersistenceMapper.tipoDocumentoToEntity( documentoIdentidadPasajero.tipo() ),
 						// Número de documento del pasajero
 						documentoIdentidadPasajero.identificador(),
 						// El listado de identificadores de vuelos
@@ -794,7 +794,7 @@ public class VuelosModelAssemblerV2 implements RepresentationModelAssembler<Vuel
 	@Override
 	public VueloDTO toModel( VueloAmpliadoDTO entity ) {
 
-		VueloDTO vuelo = VueloMapper.vueloToDTO( entity );
+		VueloDTO vuelo = ApiRestV2Mapper.vueloToDTO( entity );
 
 		if ( entity.getIdReserva() != null ) {
 			vuelo.add( linkReserva( entity.getIdReserva() ) );
@@ -858,17 +858,17 @@ En sesiones posteriores veremos mecanismos más seguros para autenticación y au
 @RestController
 public class VuelosEndpointV2 {
 
-	private final GetVuelosUseCase getVuelosUseCase;
+	private final GestionarVuelosUseCase vuelosUseCase;
 	private final VuelosModelAssemblerV2 vuelosModelAssembler;
 	private final PagedResourcesAssembler<VueloAmpliadoDTO> pagedResourcesAssembler;
 	private final AuthService authService;
 
 	public VuelosEndpointV2(
-			GetVuelosUseCase getVuelosUseCase,
+			GestionarVuelosUseCase gestionarVuelosUseCase,
 			VuelosModelAssemblerV2 vuelosModelAssembler,
 			PagedResourcesAssembler<VueloAmpliadoDTO> pagedResourcesAssembler,
 			AuthService authService ) {
-		this.getVuelosUseCase = getVuelosUseCase;
+		this.gestionarVuelosUseCase = gestionarVuelosUseCase;
 		this.vuelosModelAssembler = vuelosModelAssembler;
 		this.pagedResourcesAssembler = pagedResourcesAssembler;
 		this.authService = authService;
@@ -882,7 +882,7 @@ public class VuelosEndpointV2 {
 
 		DocumentoIdentidad documento = authService.parseUserHeader( usuario );
 		return pagedResourcesAssembler.toModel(
-				getVuelosUseCase.getVuelos( documento, page, size ),
+				gestionarVuelosUseCase.getVuelos( documento, page, size ),
 				vuelosModelAssembler
 		);
 	}
@@ -913,4 +913,3 @@ public class VuelosEndpointV2 {
 	}
 ```
 </details>
-
