@@ -9,18 +9,18 @@ import es.um.atica.umufly.vuelos.adaptors.api.rest.AuthService;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.Constants;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.ReservaVueloDTO;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.mapper.ReservaVueloMapper;
-import es.um.atica.umufly.vuelos.application.usecase.creareserva.CreaReservaUseCase;
+import es.um.atica.umufly.vuelos.application.usecase.reservas.GestionarReservaUseCase;
 import es.um.atica.umufly.vuelos.domain.model.ClaseAsientoReserva;
 import jakarta.validation.Valid;
 
 @RestController( "v2.reservasEndpoint" )
 public class ReservasEndpoint {
 
-	private final CreaReservaUseCase creaReservaUseCase;
+	private final GestionarReservaUseCase creaReservaUseCase;
 	private final ReservasModelAssembler reservasModelAssembler;
 	private final AuthService authService;
 
-	public ReservasEndpoint( CreaReservaUseCase creaReservaUseCase, ReservasModelAssembler reservasModelAssembler, AuthService authService ) {
+	public ReservasEndpoint( GestionarReservaUseCase creaReservaUseCase, ReservasModelAssembler reservasModelAssembler, AuthService authService ) {
 		this.creaReservaUseCase = creaReservaUseCase;
 		this.reservasModelAssembler = reservasModelAssembler;
 		this.authService = authService;

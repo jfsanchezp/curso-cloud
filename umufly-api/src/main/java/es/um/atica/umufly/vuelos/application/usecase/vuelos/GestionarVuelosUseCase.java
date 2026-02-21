@@ -1,4 +1,4 @@
-package es.um.atica.umufly.vuelos.application.usecase.getvuelos;
+package es.um.atica.umufly.vuelos.application.usecase.vuelos;
 
 import java.util.Collections;
 import java.util.Map;
@@ -15,12 +15,12 @@ import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.domain.model.Vuelo;
 
 @Component
-public class GetVuelosUseCase {
+public class GestionarVuelosUseCase {
 
 	private final VuelosRepository vuelosRepository;
 	private final ReservasVueloRepository reservasVueloRepository;
 
-	public GetVuelosUseCase( VuelosRepository vuelosRepository, ReservasVueloRepository reservasVueloRepository ) {
+	public GestionarVuelosUseCase( VuelosRepository vuelosRepository, ReservasVueloRepository reservasVueloRepository ) {
 		this.vuelosRepository = vuelosRepository;
 		this.reservasVueloRepository = reservasVueloRepository;
 	}

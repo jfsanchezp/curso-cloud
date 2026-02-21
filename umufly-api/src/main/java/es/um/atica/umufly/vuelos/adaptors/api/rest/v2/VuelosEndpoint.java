@@ -11,17 +11,17 @@ import es.um.atica.umufly.vuelos.adaptors.api.rest.AuthService;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.Constants;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.VueloDTO;
 import es.um.atica.umufly.vuelos.application.dto.VueloAmpliado;
-import es.um.atica.umufly.vuelos.application.usecase.getvuelos.GetVuelosUseCase;
+import es.um.atica.umufly.vuelos.application.usecase.vuelos.GestionarVuelosUseCase;
 
 @RestController( "v2.vuelosEndpoint" )
 public class VuelosEndpoint {
 
-	private final GetVuelosUseCase getVuelosAmpliadosUseCase;
+	private final GestionarVuelosUseCase getVuelosAmpliadosUseCase;
 	private final VuelosModelAssembler vuelosModelAssembler;
 	private final PagedResourcesAssembler<VueloAmpliado> pagedResourcesAssembler;
 	private final AuthService authService;
 
-	public VuelosEndpoint( GetVuelosUseCase getVuelosAmpliadosUseCase, VuelosModelAssembler vuelosModelAssembler, PagedResourcesAssembler<VueloAmpliado> pagedResourcesAssembler, AuthService authService ) {
+	public VuelosEndpoint( GestionarVuelosUseCase getVuelosAmpliadosUseCase, VuelosModelAssembler vuelosModelAssembler, PagedResourcesAssembler<VueloAmpliado> pagedResourcesAssembler, AuthService authService ) {
 		this.getVuelosAmpliadosUseCase = getVuelosAmpliadosUseCase;
 		this.vuelosModelAssembler = vuelosModelAssembler;
 		this.pagedResourcesAssembler = pagedResourcesAssembler;

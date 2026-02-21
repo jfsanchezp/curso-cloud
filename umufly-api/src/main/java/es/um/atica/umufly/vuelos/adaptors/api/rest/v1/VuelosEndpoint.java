@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.Constants;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v1.dto.VueloDTO;
 import es.um.atica.umufly.vuelos.application.dto.VueloAmpliado;
-import es.um.atica.umufly.vuelos.application.usecase.getvuelos.GetVuelosUseCase;
+import es.um.atica.umufly.vuelos.application.usecase.vuelos.GestionarVuelosUseCase;
 
 @RestController( "v1.vuelosEndpoint" )
 public class VuelosEndpoint {
 
-	private final GetVuelosUseCase getVuelosUseCase;
+	private final GestionarVuelosUseCase getVuelosUseCase;
 	private final VuelosModelAssembler vuelosModelAssembler;
 	private final PagedResourcesAssembler<VueloAmpliado> pagedResourcesAssembler;
 
-	public VuelosEndpoint( GetVuelosUseCase getVuelosUseCase, VuelosModelAssembler vuelosModelAssembler, PagedResourcesAssembler<VueloAmpliado> pagedResourcesAssembler ) {
+	public VuelosEndpoint( GestionarVuelosUseCase getVuelosUseCase, VuelosModelAssembler vuelosModelAssembler, PagedResourcesAssembler<VueloAmpliado> pagedResourcesAssembler ) {
 		this.getVuelosUseCase = getVuelosUseCase;
 		this.vuelosModelAssembler = vuelosModelAssembler;
 		this.pagedResourcesAssembler = pagedResourcesAssembler;
