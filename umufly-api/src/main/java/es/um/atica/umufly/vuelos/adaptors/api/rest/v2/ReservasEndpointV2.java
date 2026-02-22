@@ -28,7 +28,7 @@ public class ReservasEndpointV2 {
 
 	@PostMapping( Constants.PRIVATE_PREFIX + Constants.API_VERSION_2 + Constants.RESOURCE_RESERVAS_VUELO )
 	public ReservaVueloDTO creaReserva( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @RequestBody @Valid ReservaVueloDTO nuevaReservaVuelo ) {
-		return reservasModelAssembler.toModel( gestionarReservaUseCase.creaReservaVuelo( authService.parseUserHeader( usuario ), nuevaReservaVuelo.getVuelo().getId(), ClaseAsientoReserva.valueOf( nuevaReservaVuelo.getClaseAsiento().toString() ),
+		return reservasModelAssembler.toModel( gestionarReservaUseCase.creaReserva( authService.parseUserHeader( usuario ), nuevaReservaVuelo.getVuelo().getId(), ClaseAsientoReserva.valueOf( nuevaReservaVuelo.getClaseAsiento().toString() ),
 				ApiRestV2Mapper.pasajeroToModel( nuevaReservaVuelo.getPasajero() ) ) );
 	}
 

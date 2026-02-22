@@ -13,8 +13,10 @@ import org.springframework.stereotype.Component;
 
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.EstadoReservaVueloEnum;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.ReservaVueloEntity;
+import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.ReservaVueloViewEntity;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.mapper.JpaPersistenceMapper;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.repository.JpaReservaVueloRepository;
+import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.repository.JpaReservaVueloViewRepository;
 import es.um.atica.umufly.vuelos.application.port.ReservasVueloRepository;
 import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.domain.model.Pasajero;
@@ -24,10 +26,12 @@ import es.um.atica.umufly.vuelos.domain.model.ReservaVuelo;
 public class ReservasVueloPersistenceAdapter implements ReservasVueloRepository {
 
 	private final JpaReservaVueloRepository jpaReservaVueloRepository;
+	private final JpaReservaVueloViewRepository jpaReservaVueloViewRepository;
 	private final Clock clock;
 
-	public ReservasVueloPersistenceAdapter( JpaReservaVueloRepository jpaReservaVueloRepository, Clock clock ) {
+	public ReservasVueloPersistenceAdapter( JpaReservaVueloRepository jpaReservaVueloRepository, JpaReservaVueloViewRepository jpaReservaVueloViewRepository, Clock clock ) {
 		this.jpaReservaVueloRepository = jpaReservaVueloRepository;
+		this.jpaReservaVueloViewRepository = jpaReservaVueloViewRepository;
 		this.clock = clock;
 	}
 
@@ -37,14 +41,14 @@ public class ReservasVueloPersistenceAdapter implements ReservasVueloRepository 
 			return Collections.emptyMap();
 		}
 
-		List<ReservaVueloEntity> reservasVuelo = jpaReservaVueloRepository.findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloInAndEstadoReservaIn( JpaPersistenceMapper.tipoDocumentoToEntity( documentoIdentidadPasajero.tipo() ),
+		List<ReservaVueloViewEntity> reservasVuelo = jpaReservaVueloViewRepository.findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloInAndEstadoReservaIn( JpaPersistenceMapper.tipoDocumentoToEntity( documentoIdentidadPasajero.tipo() ),
 				documentoIdentidadPasajero.identificador(), vueloIds.stream().map( UUID::toString ).toList(), Arrays.asList( EstadoReservaVueloEnum.P, EstadoReservaVueloEnum.A ) );
 		return reservasVuelo.stream().collect( Collectors.toMap( r -> UUID.fromString( r.getIdVuelo() ), r -> UUID.fromString( r.getId() ) ) );
 	}
 
 	@Override
 	public UUID findReservaIdByVueloIdAndPasajero( DocumentoIdentidad documentoIdentidadPasajero, UUID vueloId ) {
-		ReservaVueloEntity reservasPasajero = jpaReservaVueloRepository.findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloAndEstadoReservaIn( JpaPersistenceMapper.tipoDocumentoToEntity( documentoIdentidadPasajero.tipo() ),
+		ReservaVueloViewEntity reservasPasajero = jpaReservaVueloViewRepository.findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloAndEstadoReservaIn( JpaPersistenceMapper.tipoDocumentoToEntity( documentoIdentidadPasajero.tipo() ),
 				documentoIdentidadPasajero.identificador(),
 				vueloId.toString(), Arrays.asList( EstadoReservaVueloEnum.P, EstadoReservaVueloEnum.A ) );
 		return UUID.fromString( reservasPasajero.getIdVuelo() );
@@ -52,7 +56,7 @@ public class ReservasVueloPersistenceAdapter implements ReservasVueloRepository 
 
 	@Override
 	public int countReservasByIdVueloAndPasajero( UUID idVuelo, Pasajero pasajero ) {
-		return jpaReservaVueloRepository.countReservasByIdVueloAndPasajero( idVuelo.toString(), JpaPersistenceMapper.tipoDocumentoToEntity( pasajero.getIdentificador().tipo() ).toString(), pasajero.getIdentificador().identificador() );
+		return jpaReservaVueloViewRepository.countReservasByIdVueloAndPasajero( idVuelo.toString(), JpaPersistenceMapper.tipoDocumentoToEntity( pasajero.getIdentificador().tipo() ).toString(), pasajero.getIdentificador().identificador() );
 	}
 
 	@Override

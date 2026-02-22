@@ -30,7 +30,7 @@ public class GestionarReservaUseCase {
 		this.clock = clock;
 	}
 
-	public ReservaVuelo creaReservaVuelo( DocumentoIdentidad documentoIdentidadTitular, UUID idVuelo, ClaseAsientoReserva claseAsiento, Pasajero pasajero ) {
+	public ReservaVuelo creaReserva( DocumentoIdentidad documentoIdentidadTitular, UUID idVuelo, ClaseAsientoReserva claseAsiento, Pasajero pasajero ) {
 		// 1. Recuperar el vuelo
 		Vuelo vuelo = vuelosRepository.findVuelo( idVuelo );
 
