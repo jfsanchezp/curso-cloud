@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+
 import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.domain.model.Pasajero;
 import es.um.atica.umufly.vuelos.domain.model.ReservaVuelo;
@@ -58,5 +60,29 @@ public interface ReservasVueloRepository {
 	 * @param idReservaFormalizada
 	 */
 	void persistirFormalizacionReserva( UUID idReserva, UUID idReservaFormalizada );
+
+	/**
+	 * Obtiene una reserva a traves de su id.
+	 *
+	 * @param idReserva
+	 * @return
+	 */
+	ReservaVuelo findReservaById( UUID idReserva );
+
+	/**
+	 * Obtiene todas las reservas.
+	 *
+	 * @param idReserva
+	 * @return
+	 */
+	Page<ReservaVuelo> findReservas( int pagina, int tamanioPagina );
+
+	/**
+	 * M�todo que cancela una reserva a traves de su id.
+	 *
+	 * @param idReserva
+	 * @return
+	 */
+	void cancelReserva( UUID idReserva );
 
 }

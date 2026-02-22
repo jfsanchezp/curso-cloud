@@ -4,6 +4,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import es.um.atica.umufly.vuelos.application.port.FormalizacionReservasVueloPort;
@@ -50,6 +51,28 @@ public class GestionarReservaUseCase {
 		reservasVueloRepository.persistirFormalizacionReserva( reservaVuelo.getId(), idReservaFormalizada );
 
 		return reservaVuelo;
+	}
+
+	// TODO:Revisar si cancelar la reserva entera o solo la de un pasajero concreto
+	public ReservaVuelo cancelarReserva( UUID idReserva ) {
+		// 1. Recuperamos la reserva
+		ReservaVuelo reservaVuelo = reservasVueloRepository.findReservaById( idReserva );
+
+		// 2. Cancelamos la reserva llamando al backoffice para que se haga eco de la cancelacion
+		// TODO: Falta un ORDS para esto
+		// 3. Cancelamos la reserva en el fronOffice
+		reservasVueloRepository.cancelReserva( reservaVuelo.getId() );
+
+		return reservaVuelo;
+	}
+
+	public Page<ReservaVuelo> listarReservas( int pagina, int tamanioPagina ) {
+		return reservasVueloRepository.findReservas( pagina, tamanioPagina );
+
+	}
+
+	public ReservaVuelo obtenerReserva( UUID idReserva ) {
+		return reservasVueloRepository.findReservaById( idReserva );
 	}
 
 }

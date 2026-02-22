@@ -26,6 +26,6 @@ public class VuelosEndpointV1 {
 
 	@GetMapping( Constants.PRIVATE_PREFIX + Constants.API_VERSION_1 + Constants.RESOURCE_VUELOS )
 	public CollectionModel<VueloDTO> getVuelos( @RequestParam( name = "page", defaultValue = "0" ) int page, @RequestParam( name = "size", defaultValue = "25" ) int size ) {
-		return pagedResourcesAssembler.toModel( gestionarVuelosUseCase.getVuelos( null, page, size ), vuelosModelAssemblervV1 );
+		return pagedResourcesAssembler.toModel( gestionarVuelosUseCase.listarVuelos( null, page, size ), vuelosModelAssemblervV1 );
 	}
 }

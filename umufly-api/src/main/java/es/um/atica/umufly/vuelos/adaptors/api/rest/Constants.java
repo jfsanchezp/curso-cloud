@@ -13,6 +13,7 @@ public class Constants {
 
 	public static final String PATTERN_FECHA_HORA = "dd/MM/yyyy HH:mm:ss";
 	public static final String RESOURCE_RESERVAS_VUELO = "/reservas-vuelo";
+	public static final String ID_RESERVA = "/{idReserva}";
 
 	private Constants() {
 		throw new IllegalStateException( "Clase de constantes" );
