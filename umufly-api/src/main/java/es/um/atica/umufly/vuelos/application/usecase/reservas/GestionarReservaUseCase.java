@@ -53,13 +53,13 @@ public class GestionarReservaUseCase {
 		return reservaVuelo;
 	}
 
-	// TODO:Revisar si cancelar la reserva entera o solo la de un pasajero concreto
-	public ReservaVuelo cancelarReserva( UUID idReserva ) {
+	public ReservaVuelo cancelarReserva( DocumentoIdentidad documentoIdentidadTitular, UUID idReserva ) {
 		// 1. Recuperamos la reserva
 		ReservaVuelo reservaVuelo = reservasVueloRepository.findReservaById( idReserva );
 
 		// 2. Cancelamos la reserva llamando al backoffice para que se haga eco de la cancelacion
 		// TODO: Falta un ORDS para esto
+		formalizacionReservasVueloPort.cancelarReservaVuelo( documentoIdentidadTitular, idReserva );
 		// 3. Cancelamos la reserva en el fronOffice
 		reservasVueloRepository.cancelReserva( reservaVuelo.getId() );
 

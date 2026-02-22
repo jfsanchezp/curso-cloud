@@ -45,7 +45,7 @@ public class ReservasEndpointV2 {
 
 	@DeleteMapping( Constants.PRIVATE_PREFIX + Constants.API_VERSION_2 + Constants.RESOURCE_RESERVAS_VUELO + Constants.ID_RESERVA )
 	public ReservaVueloDTO cancelarReserva( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @PathVariable( "idReserva" ) UUID idReserva ) {
-		return reservasModelAssembler.toModel( gestionarReservaUseCase.cancelarReserva( idReserva ) );
+		return reservasModelAssembler.toModel( gestionarReservaUseCase.cancelarReserva( authService.parseUserHeader( usuario ), idReserva ) );
 	}
 
 	@GetMapping( Constants.PRIVATE_PREFIX + Constants.API_VERSION_2 + Constants.RESOURCE_RESERVAS_VUELO )
