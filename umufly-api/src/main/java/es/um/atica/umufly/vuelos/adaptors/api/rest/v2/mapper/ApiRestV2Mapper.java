@@ -10,6 +10,7 @@ import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.PasajeroDTO;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.ReservaVueloDTO;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.TipoVuelo;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.VueloDTO;
+import es.um.atica.umufly.vuelos.adaptors.providers.muchovuelo.dto.TipoDocumentoDTO;
 import es.um.atica.umufly.vuelos.application.dto.VueloAmpliadoDTO;
 import es.um.atica.umufly.vuelos.domain.model.CorreoElectronico;
 import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
@@ -69,5 +70,14 @@ public class ApiRestV2Mapper {
 	private static VueloDTO vueloToDTO( Vuelo vv ) {
 		return new VueloDTO( vv.getId(), new ItinerarioDTO( vv.getItinerario().salida(), vv.getItinerario().llegada(), vv.getItinerario().origen(), vv.getItinerario().destino() ), TipoVuelo.valueOf( vv.getTipo().toString() ),
 				EstadoVuelo.valueOf( vv.getEstado().toString() ), new AvionDTO( vv.getAvion().capacidad() ) );
+	}
+
+	public static TipoDocumentoDTO tipoDocumentoToDTO( TipoDocumento tipoDocumento ) {
+		return switch ( tipoDocumento ) {
+			case NIF -> TipoDocumentoDTO.NIE;
+			case NIE -> TipoDocumentoDTO.NIE;
+			case PASAPORTE -> TipoDocumentoDTO.PASAPORTE;
+			default -> throw new IllegalArgumentException( "Unexpected value: " + tipoDocumento );
+		};
 	}
 }

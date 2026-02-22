@@ -25,10 +25,17 @@ public class GestionarVuelosUseCase {
 		this.reservasVueloRepository = reservasVueloRepository;
 	}
 
-	public Page<VueloAmpliadoDTO> getVuelos(DocumentoIdentidad documentoIdentidadPasajero, int pagina, int tamanioPagina ) {
+	public Page<VueloAmpliadoDTO> listarVuelos(DocumentoIdentidad documentoIdentidadPasajero, int pagina, int tamanioPagina ) {
 		Page<Vuelo> vuelos = vuelosRepository.findVuelos( pagina, tamanioPagina );
-		Map<UUID, UUID> vuelosReserva = documentoIdentidadPasajero != null ? reservasVueloRepository.findReservaIdByVueloIdAndPasajero( documentoIdentidadPasajero, vuelos.map( Vuelo::getId ).getContent() ) : Collections.emptyMap();
+		Map<UUID, UUID> vuelosReserva = documentoIdentidadPasajero != null ? reservasVueloRepository.findReservasIdByVueloIdAndPasajero( documentoIdentidadPasajero, vuelos.map( Vuelo::getId ).getContent() ) : Collections.emptyMap();
 
 		return vuelos.map( v -> ApplicationMapper.vueloToDTO( v, vuelosReserva.get( v.getId() ) ) );
+	}
+
+	public VueloAmpliadoDTO obtenerVuelo( DocumentoIdentidad documentoIdentidadPasajero, UUID idVuelo ) {
+		Vuelo vuelo = vuelosRepository.findVuelo( idVuelo );
+		UUID vueloReserva = documentoIdentidadPasajero != null ? reservasVueloRepository.findReservaIdByVueloIdAndPasajero( documentoIdentidadPasajero, vuelo.getId() ) : null;
+
+		return ApplicationMapper.vueloToDTO( vuelo, vueloReserva );
 	}
 }

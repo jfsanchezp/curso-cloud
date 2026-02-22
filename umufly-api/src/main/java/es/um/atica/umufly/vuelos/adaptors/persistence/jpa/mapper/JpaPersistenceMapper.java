@@ -8,14 +8,20 @@ import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.EstadoReservaVu
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.EstadoVueloEnum;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.ReservaVueloEntity;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.ReservaVueloPasajeroEntity;
+import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.ReservaVueloPasajeroViewEntity;
+import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.ReservaVueloViewEntity;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.TipoDocumentoEnum;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.TipoVueloEnum;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.VueloExtViewEntity;
 import es.um.atica.umufly.vuelos.domain.model.Avion;
 import es.um.atica.umufly.vuelos.domain.model.ClaseAsientoReserva;
+import es.um.atica.umufly.vuelos.domain.model.CorreoElectronico;
+import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.domain.model.EstadoReserva;
 import es.um.atica.umufly.vuelos.domain.model.EstadoVuelo;
 import es.um.atica.umufly.vuelos.domain.model.Itinerario;
+import es.um.atica.umufly.vuelos.domain.model.Nacionalidad;
+import es.um.atica.umufly.vuelos.domain.model.NombreCompleto;
 import es.um.atica.umufly.vuelos.domain.model.Pasajero;
 import es.um.atica.umufly.vuelos.domain.model.ReservaVuelo;
 import es.um.atica.umufly.vuelos.domain.model.TipoDocumento;
@@ -38,6 +44,15 @@ public class JpaPersistenceMapper {
 			case NIF -> TipoDocumentoEnum.N;
 			case NIE -> TipoDocumentoEnum.E;
 			case PASAPORTE -> TipoDocumentoEnum.P;
+			default -> throw new IllegalArgumentException( "Unexpected value: " + tipoDocumento );
+		};
+	}
+
+	public static TipoDocumento tipoDocumentoEntityToModel( TipoDocumentoEnum tipoDocumento ) {
+		return switch ( tipoDocumento ) {
+			case N -> TipoDocumento.NIF;
+			case E -> TipoDocumento.NIE;
+			case P -> TipoDocumento.PASAPORTE;
 			default -> throw new IllegalArgumentException( "Unexpected value: " + tipoDocumento );
 		};
 	}
@@ -77,11 +92,29 @@ public class JpaPersistenceMapper {
 		};
 	}
 
+	public static ClaseAsientoReserva claseAsientoReservaEntityToModel( ClaseAsientoReservaEnum claseAsiento ) {
+		return switch ( claseAsiento ) {
+			case E -> ClaseAsientoReserva.ECONOMICA;
+			case B -> ClaseAsientoReserva.BUSINESS;
+			case P -> ClaseAsientoReserva.PRIMERA;
+			default -> throw new IllegalArgumentException( "Clase de asiento no contemplada: " + claseAsiento );
+		};
+	}
+
 	public static EstadoReservaVueloEnum estadoReservaToEntity( EstadoReserva estadoReserva ) {
 		return switch ( estadoReserva ) {
 			case PENDIENTE -> EstadoReservaVueloEnum.P;
 			case ACTIVA -> EstadoReservaVueloEnum.A;
 			case CANCELADA -> EstadoReservaVueloEnum.X;
+			default -> throw new IllegalArgumentException( "Estado de la reserva no contemplado: " + estadoReserva );
+		};
+	}
+
+	public static EstadoReserva estadoReservaEntityToModel( EstadoReservaVueloEnum estadoReserva ) {
+		return switch ( estadoReserva ) {
+			case P -> EstadoReserva.PENDIENTE;
+			case A -> EstadoReserva.ACTIVA;
+			case X -> EstadoReserva.CANCELADA;
 			default -> throw new IllegalArgumentException( "Estado de la reserva no contemplado: " + estadoReserva );
 		};
 	}
@@ -100,6 +133,27 @@ public class JpaPersistenceMapper {
 		return r;
 	}
 
+	public static ReservaVueloViewEntity reservaVueloViewToEntity( ReservaVuelo rr, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion ) {
+		ReservaVueloViewEntity r = new ReservaVueloViewEntity();
+		r.setId( rr.getId().toString() );
+		r.setTipoDocumentoTitular( tipoDocumentoToEntity( rr.getIdentificadorTitular().tipo() ) );
+		r.setNumeroDocumentoTitular( rr.getIdentificadorTitular().identificador() );
+		r.setIdVuelo( rr.getVuelo().getId().toString() );
+		r.setClaseAsientoReserva( claseAsientoReservaToEntity( rr.getClase() ) );
+		r.setFechaCreacion( fechaCreacion );
+		r.setFechaModificacion( fechaModificacion );
+		r.setEstadoReserva( estadoReservaToEntity( rr.getEstado() ) );
+		r.addPasajero( pasajeroViewToEntity( rr.getPasajero() ) );
+		return r;
+	}
+
+	public static ReservaVuelo reservaVueloToModel( ReservaVueloEntity r, VueloExtViewEntity v ) {
+		// TODO: Porque el objeto del modelo no puede ser una lista de pasajeros
+		return ReservaVuelo.of( UUID.fromString( r.getId() ), new DocumentoIdentidad( tipoDocumentoEntityToModel( r.getTipoDocumentoTitular() ), r.getNumeroDocumentoTitular() ),
+				r.getPasajeros() == null || r.getPasajeros().isEmpty() ? null : pasajeroToModel( r.getPasajeros().get( 0 ) ), v != null ? vueloToModel( v ) : null, claseAsientoReservaEntityToModel( r.getClaseAsientoReserva() ), r.getFechaCreacion(),
+				estadoReservaEntityToModel( r.getEstadoReserva() ) );
+	}
+
 	private static ReservaVueloPasajeroEntity pasajeroToEntity( Pasajero pp ) {
 		ReservaVueloPasajeroEntity p = new ReservaVueloPasajeroEntity();
 		p.setId( UUID.randomUUID().toString() );
@@ -111,5 +165,23 @@ public class JpaPersistenceMapper {
 		p.setEmail( pp.getCorreo().valor() );
 		p.setNacionalidad( pp.getNacionalidad().valor() );
 		return p;
+	}
+
+	private static ReservaVueloPasajeroViewEntity pasajeroViewToEntity( Pasajero pp ) {
+		ReservaVueloPasajeroViewEntity p = new ReservaVueloPasajeroViewEntity();
+		p.setId( UUID.randomUUID().toString() );
+		p.setTipoDocumento( tipoDocumentoToEntity( pp.getIdentificador().tipo() ) );
+		p.setNumeroDocumento( pp.getIdentificador().identificador() );
+		p.setNombre( pp.getNombre().nombre() );
+		p.setPrimerApellido( pp.getNombre().primerApellido() );
+		p.setSegundoApellido( pp.getNombre().segundoApellido() );
+		p.setEmail( pp.getCorreo().valor() );
+		p.setNacionalidad( pp.getNacionalidad().valor() );
+		return p;
+	}
+
+	public static Pasajero pasajeroToModel( ReservaVueloPasajeroEntity p ) {
+		return Pasajero.of( new DocumentoIdentidad( tipoDocumentoEntityToModel( p.getTipoDocumento() ), p.getNumeroDocumento() ), new NombreCompleto( p.getNombre(), p.getPrimerApellido(), p.getSegundoApellido() ), new CorreoElectronico( p.getEmail() ),
+				new Nacionalidad( p.getNacionalidad() ) );
 	}
 }

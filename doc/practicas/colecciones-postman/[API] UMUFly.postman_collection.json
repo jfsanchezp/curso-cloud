@@ -1,9 +1,10 @@
 {
   "info": {
-    "_postman_id": "67dbd169-f4f9-4f26-9d72-152483425f5e",
+    "_postman_id": "08853f1f-87d3-46eb-a9c0-bac5fb33580b",
     "name": "UMUFly - API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "10176396"
+    "_exporter_id": "52541393",
+    "_collection_link": "https://go.postman.co/collection/52541393-08853f1f-87d3-46eb-a9c0-bac5fb33580b?source=collection_link"
   },
   "item": [
     {
@@ -15,10 +16,10 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://{{apium.host}}/private/v1.0/pruebas",
+              "raw": "http://{{host}}/private/v1.0/pruebas",
               "protocol": "http",
               "host": [
-                "{{apium.host}}"
+                "{{host}}"
               ],
               "path": [
                 "private",
@@ -67,10 +68,10 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://{{apium.host}}/private/v1.0/vuelos?page=0&size=10",
+              "raw": "http://{{api.host}}/private/v1.0/vuelos?page=0&size=10",
               "protocol": "http",
               "host": [
-                "{{apium.host}}"
+                "{{api.host}}"
               ],
               "path": [
                 "private",
@@ -103,10 +104,10 @@
               }
             ],
             "url": {
-              "raw": "http://{{apium.host}}/private/v2.0/vuelos?page=0&size=10",
+              "raw": "http://{{api.host}}/private/v2.0/vuelos?page=0&size=10",
               "protocol": "http",
               "host": [
-                "{{apium.host}}"
+                "{{api.host}}"
               ],
               "path": [
                 "private",
@@ -139,10 +140,10 @@
               }
             ],
             "url": {
-              "raw": "http://{{apium.host}}/private/v2.0/vuelos/:idVuelo",
+              "raw": "http://{{api.host}}/private/v2.0/vuelos/:idVuelo",
               "protocol": "http",
               "host": [
-                "{{apium.host}}"
+                "{{api.host}}"
               ],
               "path": [
                 "private",
@@ -214,10 +215,10 @@
               }
             },
             "url": {
-              "raw": "http://{{apium.host}}/private/v2.0/reservas-vuelo",
+              "raw": "http://{{api.host}}/private/v2.0/reservas-vuelo",
               "protocol": "http",
               "host": [
-                "{{apium.host}}"
+                "{{api.host}}"
               ],
               "path": [
                 "private",
@@ -250,10 +251,79 @@
               }
             },
             "url": {
-              "raw": "http://{{apium.host}}/private/v2.0/reservas-vuelo/:idReserva",
+              "raw": "http://{{api.host}}/private/v2.0/reservas-vuelo/:idReserva",
               "protocol": "http",
               "host": [
-                "{{apium.host}}"
+                "{{api.host}}"
+              ],
+              "path": [
+                "private",
+                "v2.0",
+                "reservas-vuelo",
+                ":idReserva"
+              ],
+              "variable": [
+                {
+                  "key": "idReserva",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[v2] [private] [listado] reservas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "UMU-Usuario",
+                "value": "[tipo_documento]:[numero_documento]",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://{{api.host}}/private/v2.0/reservas-vuelo?page=0&size=10",
+              "protocol": "http",
+              "host": [
+                "{{api.host}}"
+              ],
+              "path": [
+                "private",
+                "v2.0",
+                "reservas-vuelo"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[v2] [private] [detalle] reserva",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "UMU-Usuario",
+                "value": "[tipo_documento]:[numero_documento]",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://{{api.host}}/private/v2.0/reservas-vuelo/:idReserva",
+              "protocol": "http",
+              "host": [
+                "{{api.host}}"
               ],
               "path": [
                 "private",
