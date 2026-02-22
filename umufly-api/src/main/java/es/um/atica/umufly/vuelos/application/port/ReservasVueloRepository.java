@@ -20,10 +20,22 @@ public interface ReservasVueloRepository {
 	 * @return mapa cuya clave es el identificador del vuelo y cuyo valor es el identificador de la reserva asociada a dicho
 	 *         vuelo; solo se incluyen los vuelos para los que el pasajero tiene una reserva activa
 	 */
-	Map<UUID, UUID> findReservaIdByVueloIdAndPasajero( DocumentoIdentidad documentoIdentidadPasajero, List<UUID> vueloIds );
+	Map<UUID, UUID> findReservasIdByVueloIdAndPasajero( DocumentoIdentidad documentoIdentidadPasajero, List<UUID> vueloIds );
 
 	/**
-	 * Método que cuenta las reservas de vuelo que tiene un pasajero en un vuelo concreto.
+	 * Obtiene las reservas asociadas a un pasajero para un conjunto de vuelos.
+	 *
+	 * @param documentoIdentidadPasajero
+	 *                                   documento de identidad del pasajero
+	 * @param vueloId
+	 *                                   identificador del vuelo a consultar
+	 * @return mapa cuya clave es el identificador del vuelo y cuyo valor es el identificador de la reserva asociada a dicho
+	 *         vuelo; solo se incluyen los vuelos para los que el pasajero tiene una reserva activa
+	 */
+	UUID findReservaIdByVueloIdAndPasajero( DocumentoIdentidad documentoIdentidadPasajero, UUID vueloId );
+
+	/**
+	 * Mï¿½todo que cuenta las reservas de vuelo que tiene un pasajero en un vuelo concreto.
 	 *
 	 * @param idVuelo
 	 * @param pasajero
@@ -32,7 +44,7 @@ public interface ReservasVueloRepository {
 	int countReservasByIdVueloAndPasajero( UUID idVuelo, Pasajero pasajero );
 
 	/**
-	 * Método que persiste una reserva de vuelo.
+	 * Mï¿½todo que persiste una reserva de vuelo.
 	 *
 	 * @param reservaVuelo
 	 */
@@ -40,7 +52,7 @@ public interface ReservasVueloRepository {
 
 
 	/**
-	 * Método que persiste la formalización de la reserva de vuelo.
+	 * Mï¿½todo que persiste la formalizaciï¿½n de la reserva de vuelo.
 	 *
 	 * @param idReserva
 	 * @param idReservaFormalizada

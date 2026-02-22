@@ -22,4 +22,6 @@ public interface JpaReservaVueloRepository extends JpaRepository<ReservaVueloEnt
 	int countReservasByIdVueloAndPasajero( @Param( "idVuelo" ) String idVuelo, @Param( "tipoDocumento" ) String tipoDocumento, @Param( "numeroDocumento" ) String numeroDocumento );
 
 	List<ReservaVueloEntity> findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloInAndEstadoReservaIn( TipoDocumentoEnum tipoDocumento, String numeroDocumento, List<String> idsVuelo, List<EstadoReservaVueloEnum> estados );
+
+	ReservaVueloEntity findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloAndEstadoReservaIn( TipoDocumentoEnum tipoDocumento, String numeroDocumento, String idsVuelo, List<EstadoReservaVueloEnum> estados );
 }

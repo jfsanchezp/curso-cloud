@@ -32,7 +32,7 @@ public class ReservasVueloPersistenceAdapter implements ReservasVueloRepository 
 	}
 
 	@Override
-	public Map<UUID, UUID> findReservaIdByVueloIdAndPasajero( DocumentoIdentidad documentoIdentidadPasajero, List<UUID> vueloIds ) {
+	public Map<UUID, UUID> findReservasIdByVueloIdAndPasajero( DocumentoIdentidad documentoIdentidadPasajero, List<UUID> vueloIds ) {
 		if ( vueloIds.isEmpty() ) {
 			return Collections.emptyMap();
 		}
@@ -40,6 +40,14 @@ public class ReservasVueloPersistenceAdapter implements ReservasVueloRepository 
 		List<ReservaVueloEntity> reservasVuelo = jpaReservaVueloRepository.findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloInAndEstadoReservaIn( JpaPersistenceMapper.tipoDocumentoToEntity( documentoIdentidadPasajero.tipo() ),
 				documentoIdentidadPasajero.identificador(), vueloIds.stream().map( UUID::toString ).toList(), Arrays.asList( EstadoReservaVueloEnum.P, EstadoReservaVueloEnum.A ) );
 		return reservasVuelo.stream().collect( Collectors.toMap( r -> UUID.fromString( r.getIdVuelo() ), r -> UUID.fromString( r.getId() ) ) );
+	}
+
+	@Override
+	public UUID findReservaIdByVueloIdAndPasajero( DocumentoIdentidad documentoIdentidadPasajero, UUID vueloId ) {
+		ReservaVueloEntity reservasPasajero = jpaReservaVueloRepository.findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloAndEstadoReservaIn( JpaPersistenceMapper.tipoDocumentoToEntity( documentoIdentidadPasajero.tipo() ),
+				documentoIdentidadPasajero.identificador(),
+				vueloId.toString(), Arrays.asList( EstadoReservaVueloEnum.P, EstadoReservaVueloEnum.A ) );
+		return UUID.fromString( reservasPasajero.getIdVuelo() );
 	}
 
 	@Override
