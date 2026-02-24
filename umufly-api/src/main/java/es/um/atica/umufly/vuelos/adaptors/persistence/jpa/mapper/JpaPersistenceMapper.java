@@ -8,8 +8,6 @@ import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.EstadoReservaVu
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.EstadoVueloEnum;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.ReservaVueloEntity;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.ReservaVueloPasajeroEntity;
-import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.ReservaVueloPasajeroViewEntity;
-import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.ReservaVueloViewEntity;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.TipoDocumentoEnum;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.TipoVueloEnum;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity.VueloExtViewEntity;
@@ -133,20 +131,6 @@ public class JpaPersistenceMapper {
 		return r;
 	}
 
-	public static ReservaVueloViewEntity reservaVueloViewToEntity( ReservaVuelo rr, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion ) {
-		ReservaVueloViewEntity r = new ReservaVueloViewEntity();
-		r.setId( rr.getId().toString() );
-		r.setTipoDocumentoTitular( tipoDocumentoToEntity( rr.getIdentificadorTitular().tipo() ) );
-		r.setNumeroDocumentoTitular( rr.getIdentificadorTitular().identificador() );
-		r.setIdVuelo( rr.getVuelo().getId().toString() );
-		r.setClaseAsientoReserva( claseAsientoReservaToEntity( rr.getClase() ) );
-		r.setFechaCreacion( fechaCreacion );
-		r.setFechaModificacion( fechaModificacion );
-		r.setEstadoReserva( estadoReservaToEntity( rr.getEstado() ) );
-		r.addPasajero( pasajeroViewToEntity( rr.getPasajero() ) );
-		return r;
-	}
-
 	public static ReservaVuelo reservaVueloToModel( ReservaVueloEntity r, VueloExtViewEntity v ) {
 		return ReservaVuelo.of( UUID.fromString( r.getId() ), new DocumentoIdentidad( tipoDocumentoEntityToModel( r.getTipoDocumentoTitular() ), r.getNumeroDocumentoTitular() ),
 				r.getPasajeros() == null || r.getPasajeros().isEmpty() ? null : pasajeroToModel( r.getPasajeros().get( 0 ) ), v != null ? vueloToModel( v ) : null, claseAsientoReservaEntityToModel( r.getClaseAsientoReserva() ), r.getFechaCreacion(),
@@ -155,19 +139,6 @@ public class JpaPersistenceMapper {
 
 	private static ReservaVueloPasajeroEntity pasajeroToEntity( Pasajero pp ) {
 		ReservaVueloPasajeroEntity p = new ReservaVueloPasajeroEntity();
-		p.setId( UUID.randomUUID().toString() );
-		p.setTipoDocumento( tipoDocumentoToEntity( pp.getIdentificador().tipo() ) );
-		p.setNumeroDocumento( pp.getIdentificador().identificador() );
-		p.setNombre( pp.getNombre().nombre() );
-		p.setPrimerApellido( pp.getNombre().primerApellido() );
-		p.setSegundoApellido( pp.getNombre().segundoApellido() );
-		p.setEmail( pp.getCorreo().valor() );
-		p.setNacionalidad( pp.getNacionalidad().valor() );
-		return p;
-	}
-
-	private static ReservaVueloPasajeroViewEntity pasajeroViewToEntity( Pasajero pp ) {
-		ReservaVueloPasajeroViewEntity p = new ReservaVueloPasajeroViewEntity();
 		p.setId( UUID.randomUUID().toString() );
 		p.setTipoDocumento( tipoDocumentoToEntity( pp.getIdentificador().tipo() ) );
 		p.setNumeroDocumento( pp.getIdentificador().identificador() );
