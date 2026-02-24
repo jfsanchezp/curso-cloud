@@ -60,11 +60,11 @@ En nuestro caso, para obtener el listado de vuelos, crearemos el paquete:
 
 `es.um.atica.umufly.vuelos.application.usecase.vuelos`
 
-Dentro de este paquete crearemos la clase `VuelosUseCase`, que contendrá la lógica del caso de uso.
+Dentro de este paquete crearemos la clase `GestionarVuelosUseCase`, que contendrá la lógica del caso de uso.
 
 ``` java
 @Component
-public class VuelosUseCase {
+public class GestionarVuelosUseCase {
 
 	public Page<Vuelo> getVuelos(int pagina, int tamanioPagina ) {
     // 1. Obtenemos y devolveremos el listado de vuelos 
@@ -96,11 +96,11 @@ public interface VuelosRepository {
 Ahora tendríamos que actualizar el caso de uso para utilizar este puerto.
 ``` java
 @Component
-public class VuelosUseCase {
+public class GestionarVuelosUseCase {
 
   private final VuelosRepository vuelosRepository;
 
-	public VuelosUseCase( VuelosRepository vuelosRepository ) {
+	public GestionarVuelosUseCase( VuelosRepository vuelosRepository ) {
 		this.vuelosRepository = vuelosRepository;
 	}
 
@@ -254,7 +254,7 @@ public class VuelosPersistenceAdapter implements VuelosRepository {
 
 	@Override
 	public Page<Vuelo> findVuelos( int pagina, int tamanioPagina ) {
-		return jpaVueloRepository.findAll( PageRequest.of( pagina, tamanioPagina ) ).map( VueloMapper::vueloEntityToModel );
+		return jpaVueloRepository.findAll( PageRequest.of( pagina, tamanioPagina ) ).map( JpaPersistenceMapper::vueloToModel );
 	}
 }
 ```
@@ -266,13 +266,13 @@ Ahora debemos definir el mapper encargado de traducir las entidades a objetos de
 Y el mapper quedaría:
 
 ``` java
-public class VueloMapper {
+public class JpaPersistenceMapper {
 
-	private VueloMapper() {
+	private JpaPersistenceMapper() {
 		throw new IllegalStateException( "Clase de conversión" );
 	}
 
-	public static Vuelo vueloEntityToModel( VueloExtViewEntity v ) {
+	public static Vuelo vueloToModel( VueloExtViewEntity v ) {
         return Vuelo.of(
                 UUID.fromString(v.getId()),
                 new Itinerario(v.getFechaSalida(), v.getFechaLlegada(), v.getOrigen(), v.getDestino()),
@@ -319,7 +319,7 @@ Al tratarse de un adaptador, todos los elementos relacionados con él se ubicar�
 
 `es.um.atica.umufly.vuelos.adaptors.api.rest` 
 
-#### DTOs 
+#### DTOs
 Lo primero que debemos hacer es definir los DTOs que devolverá nuestro controlador REST. Si recordamos el enunciado, se nos pedía la siguiente información de un vuelo: identificador, fecha y hora de salida y llegada, si es nacional o internacional, aeropuerto de origen, aeropuerto de destino, estado del vuelo y capacidad del avión.
 
 En una arquitectura hexagonal, el adaptador REST no debe exponer directamente el modelo de dominio. Para ello definimos DTOs específicos que representan la información que queremos publicar a través de la API.
@@ -357,9 +357,9 @@ El mapper lo depositaremos en:
 `es.um.atica.umufly.vuelos.adaptors.api.rest.mapper`
 
 ``` java
-public class VueloMapper {
+public class ApiRestMapper {
 
-	private VueloMapper() {
+	private ApiRestMapper() {
 		throw new IllegalStateException( "Clase de conversión" );
 	}
 
@@ -394,7 +394,7 @@ public class VuelosModelAssembler implements RepresentationModelAssembler<Vuelo,
 
 	@Override
 	public VueloDTO toModel( Vuelo entity ) {
-		return VueloMapper.vueloToDTO( entity );
+		return ApiRestMapper.vueloToDTO( entity );
 	}
 
 }
@@ -422,14 +422,14 @@ Es importante remarcar que el controlador REST no contiene lógica de negocio. �
 @RestController
 public class VuelosEndpoint {
 
-    private final VuelosUseCase vuelosUseCase;
+    private final GestionarVuelosUseCase gestionarVuelosUseCase;
     private final VuelosModelAssembler vuelosModelAssembler;
     private final PagedResourcesAssembler<Vuelo> pagedResourcesAssembler;
 
-    public VuelosEndpoint(VuelosUseCase vuelosUseCase,
+    public VuelosEndpoint(GestionarVuelosUseCase gestionarVuelosUseCase,
                           VuelosModelAssembler vuelosModelAssembler,
                           PagedResourcesAssembler<Vuelo> pagedResourcesAssembler) {
-        this.vuelosUseCase = vuelosUseCase;
+        this.gestionarVuelosUseCase = gestionarVuelosUseCase;
         this.vuelosModelAssembler = vuelosModelAssembler;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
@@ -440,7 +440,7 @@ public class VuelosEndpoint {
             @RequestParam(value = "size", defaultValue = "25") int size) {
 
         return pagedResourcesAssembler.toModel(
-                vuelosUseCase.getVuelos(page, size),
+                gestionarVuelosUseCase.getVuelos(page, size),
                 vuelosModelAssembler
         );
     }
@@ -550,13 +550,13 @@ Devolvemos un `Map<UUID, UUID>` en lugar de una lista de reservas. El caso de us
 Sí. Igual que en los adaptadores, aquí necesitaremos transformar el resultado a un modelo de salida del caso de uso (el DTO de aplicación), que es el que consumirá el adaptador REST. Estará bajo el paquete `es.um.atica.umufly.vuelos.application.mapper`.
 
 ``` java
-public class VueloAmpliadoMapper {
+public class ApplicationMapper {
 
-	private VueloMapper() {
+	private ApplicationMapper() {
 		throw new IllegalStateException( "Clase de conversión" );
 	}
 
-	public static VueloAmpliadoDTO vueloModelToDTO( Vuelo v, UUID idReserva ) {
+	public static VueloAmpliadoDTO vueloToDTO( Vuelo v, UUID idReserva ) {
 		// Conversión a vuelo ampliado
 	}
 }
@@ -571,12 +571,12 @@ Ya tenemos definidos los puertos que necesita el caso de uso, ahora tenemos que 
 
 ``` java
 @Component
-public class VuelosUseCase {
+public class GestionarVuelosUseCase {
 
     private final VuelosRepository vuelosRepository;
     private final ReservasVueloRepository reservasVueloRepository;
 
-    public VuelosUseCase(VuelosRepository vuelosRepository,
+    public GestionarVuelosUseCase(VuelosRepository vuelosRepository,
                             ReservasVueloRepository reservasVueloRepository) {
         this.vuelosRepository = vuelosRepository;
         this.reservasVueloRepository = reservasVueloRepository;
@@ -589,14 +589,14 @@ public class VuelosUseCase {
         Page<Vuelo> vuelos = vuelosRepository.findVuelos(pagina, tamanioPagina);
 
         if (documentoIdentidadPasajero == null) {
-            return vuelos.map(v -> VueloAmpliadoMapper.toDto(v, null));
+            return vuelos.map(v -> ApplicationMapper.vueloToDTO(v, null));
         }
 
         List<UUID> vueloIds = vuelos.getContent().stream().map(Vuelo::getId).toList();
         Map<UUID, UUID> reservaIdPorVueloId =
                 reservasVueloRepository.findReservasActivasPorVuelosYPasajero(documentoIdentidadPasajero, vueloIds);
 
-        return vuelos.map(v -> VueloAmpliadoMapper.vueloModelToDTO(v, reservaIdPorVueloId.get(v.getId())));
+        return vuelos.map(v -> ApplicationMapper.vueloToDTO(v, reservaIdPorVueloId.get(v.getId())));
     }
 }
 ```
@@ -609,9 +609,9 @@ Aunque abordaremos el versionado en detalle más adelante, es fundamental que la
 
 Ya tenemos el caso de uso adaptado a la nueva funcionalidad. El siguiente paso será implementar el adaptador que provea la información que necesita el caso de uso.
 
-En el esquema de base de datos de nuestra API tenemos las siguientes tablas que almacenan información sobre las reservas de vuelo que se han solicitado y los pasajeros de las mismas.
+En el esquema de base de datos de nuestra API tenemos las siguientes vistas que tienen información sobre las reservas de vuelo que se han solicitado y los pasajeros de las mismas.
 
-Tabla: `FORMACION_TICARUM.RESERVA_VUELO`
+Vista: `FORMACION_TICARUM.VW_RESERVA_VUELO`
 
 | Columna                  | Tipo         | Nulo | Descripción                              |
 | ------------------------ | ------------ | ---- | ---------------------------------------- |
@@ -624,7 +624,7 @@ Tabla: `FORMACION_TICARUM.RESERVA_VUELO`
 | FECHA_MODIFICACION       | TIMESTAMP    | No   | Fecha de última modificación             |
 | ESTADO_RESERVA           | VARCHAR2(2)  | No   | Estado actual de la reserva              |
 
-Tabla: `RESERVA_VUELO_PASAJERO`
+Vista: `FORMACION_TICARUM.VW_RESERVA_VUELO_PASAJERO`
 
 | Columna          | Tipo          | Nulo | Descripción                              |
 | ---------------- | ------------- | ---- | ---------------------------------------- |
@@ -642,14 +642,14 @@ Tabla: `RESERVA_VUELO_PASAJERO`
 #### Crear entidades JPA
 Lo primero que necesitaremos será crear las entidades JPA para poder recuperar la información de las reservas que tiene un pasajero dado un listado de vuelos.
 
-En base de datos, se ha modelado de tal forma que una reserva de vuelo puede tener varios pasajeros, por lo que existe una relación 1:N entre `RESERVA_VUELO` y `RESERVA_VUELO_PASAJERO`.
+En base de datos, se ha modelado de tal forma que una reserva de vuelo puede tener varios pasajeros, por lo que existe una relación 1:N entre `VW_RESERVA_VUELO` y `VW_RESERVA_VUELO_PASAJERO`.
 
-Para reflejarla en JPA usaremos `@OneToMany` en `ReservaVueloEntity` y `@ManyToOne` en `ReservaVueloPasajeroEntity`.
+Para reflejarla en JPA usaremos `@OneToMany` en `ReservaVueloViewEntity` y `@ManyToOne` en `ReservaVueloPasajeroViewEntity`.
 
-En `ReservaVueloPasajeroEntity` tendremos:
+En `ReservaVueloPasajeroViewEntity` tendremos:
 ``` java
 @Entity
-@Table( name = "RESERVA_VUELO_PASAJERO", schema = "FORMACION_TICARUM" )
+@Table( name = "VW_RESERVA_VUELO_PASAJERO", schema = "FORMACION_TICARUM" )
 public class ReservaVueloPasajeroEntity {
 
 	...
@@ -657,21 +657,21 @@ public class ReservaVueloPasajeroEntity {
 	@NotNull
 	@ManyToOne( fetch = FetchType.LAZY )
 	@JoinColumn( name = "ID_RESERVA_VUELO", nullable = false )
-	private ReservaVueloEntity reservaVuelo;
+	private ReservaVueloViewEntity reservaVuelo;
 
 	...
 }
 ```
 
-Mientras que, en `ReservaVueloEntity` tendremos:
+Mientras que, en `ReservaVueloViewEntity` tendremos:
 ``` java
 @Entity
-@Table( name = "RESERVA_VUELO", schema = "FORMACION_TICARUM" )
-public class ReservaVueloEntity {
+@Table( name = "VW_RESERVA_VUELO", schema = "FORMACION_TICARUM" )
+public class ReservaVueloViewEntity {
 
 	...
 	@OneToMany( mappedBy = "reservaVuelo", fetch = FetchType.LAZY )
-	private List<ReservaVueloPasajeroEntity> pasajeros;
+	private List<ReservaVueloPasajeroViewEntity> pasajeros;
 	...
 }
 ```
@@ -690,9 +690,9 @@ Spring Data JPA nos permite definir esta consulta mediante una query derivada, e
 
 El repositorio quedaría de la siguiente forma:
 ``` java
-public interface JpaReservaVueloRepository extends JpaRepository<ReservaVueloEntity, String> {
+public interface JpaReservaVueloViewRepository extends JpaRepository<ReservaVueloViewEntity, String> {
 
-	List<ReservaVueloEntity> findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloInAndEstadoReservaIn(
+	List<ReservaVueloViewEntity> findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloInAndEstadoReservaIn(
 			TipoDocumentoEnum tipoDocumento,
 			String numeroDocumento,
 			List<String> idsVuelo,
@@ -712,10 +712,10 @@ Por último crearemos el adaptador del puerto que hemos definido antes para recu
 @Component
 public class ReservasVueloPersistenceAdapter implements ReservasVueloRepository {
 
-	private final JpaReservaVueloRepository jpaReservaVueloRepository;
+	private final JpaReservaVueloViewRepository jpaReservaVueloViewRepository;
 
-	public ReservasVueloPersistenceAdapter( JpaReservaVueloRepository jpaReservaVueloRepository ) {
-		this.jpaReservaVueloRepository = jpaReservaVueloRepository;
+	public ReservasVueloPersistenceAdapter( JpaReservaVueloViewRepository jpaReservaVueloViewRepository ) {
+		this.jpaReservaVueloViewRepository = jpaReservaVueloViewRepository;
 	}
 
 	public Map<UUID, UUID> findReservaIdByVueloIdAndPasajero(
@@ -725,10 +725,10 @@ public class ReservasVueloPersistenceAdapter implements ReservasVueloRepository 
 			return Collections.emptyMap();
 		}
 
-		List<ReservaVueloEntity> reservasVuelo =
-				jpaReservaVueloRepository.findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloInAndEstadoReservaIn(
+		List<ReservaVueloViewEntity> reservasVuelo =
+				jpaReservaVueloViewRepository.findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloInAndEstadoReservaIn(
 						// Tipo de documento de identidad del pasajero convertido
-						ReservaVueloMapper.tipoDocumentoEntityFromModel( documentoIdentidadPasajero.tipo() ),
+						JpaPersistenceMapper.tipoDocumentoToEntity( documentoIdentidadPasajero.tipo() ),
 						// Número de documento del pasajero
 						documentoIdentidadPasajero.identificador(),
 						// El listado de identificadores de vuelos
@@ -794,7 +794,7 @@ public class VuelosModelAssemblerV2 implements RepresentationModelAssembler<Vuel
 	@Override
 	public VueloDTO toModel( VueloAmpliadoDTO entity ) {
 
-		VueloDTO vuelo = VueloMapper.vueloToDTO( entity );
+		VueloDTO vuelo = ApiRestV2Mapper.vueloToDTO( entity );
 
 		if ( entity.getIdReserva() != null ) {
 			vuelo.add( linkReserva( entity.getIdReserva() ) );
@@ -858,17 +858,17 @@ En sesiones posteriores veremos mecanismos más seguros para autenticación y au
 @RestController
 public class VuelosEndpointV2 {
 
-	private final VuelosUseCase vuelosUseCase;
+	private final GestionarVuelosUseCase vuelosUseCase;
 	private final VuelosModelAssemblerV2 vuelosModelAssembler;
 	private final PagedResourcesAssembler<VueloAmpliadoDTO> pagedResourcesAssembler;
 	private final AuthService authService;
 
 	public VuelosEndpointV2(
-			VuelosUseCase vuelosUseCase,
+			GestionarVuelosUseCase gestionarVuelosUseCase,
 			VuelosModelAssemblerV2 vuelosModelAssembler,
 			PagedResourcesAssembler<VueloAmpliadoDTO> pagedResourcesAssembler,
 			AuthService authService ) {
-		this.vuelosUseCase = vuelosUseCase;
+		this.gestionarVuelosUseCase = gestionarVuelosUseCase;
 		this.vuelosModelAssembler = vuelosModelAssembler;
 		this.pagedResourcesAssembler = pagedResourcesAssembler;
 		this.authService = authService;
@@ -882,7 +882,7 @@ public class VuelosEndpointV2 {
 
 		DocumentoIdentidad documento = authService.parseUserHeader( usuario );
 		return pagedResourcesAssembler.toModel(
-				vuelosUseCase.getVuelos( documento, page, size ),
+				gestionarVuelosUseCase.getVuelos( documento, page, size ),
 				vuelosModelAssembler
 		);
 	}
@@ -913,4 +913,3 @@ public class VuelosEndpointV2 {
 	}
 ```
 </details>
-
