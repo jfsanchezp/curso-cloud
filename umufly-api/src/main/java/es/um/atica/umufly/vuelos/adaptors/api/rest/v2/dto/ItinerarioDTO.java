@@ -1,16 +1,29 @@
-package es.um.atica.umufly.vuelos.adaptors.api.rest.dto;
+package es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import es.um.atica.umufly.vuelos.adaptors.api.rest.Constants;
 
 @JsonInclude( Include.NON_NULL )
 public class ItinerarioDTO {
 
+	@JsonProperty( access = JsonProperty.Access.READ_ONLY )
+	@JsonFormat( pattern = Constants.PATTERN_FECHA_HORA )
 	private LocalDateTime salida;
+
+	@JsonProperty( access = JsonProperty.Access.READ_ONLY )
+	@JsonFormat( pattern = Constants.PATTERN_FECHA_HORA )
 	private LocalDateTime llegada;
+
+	@JsonProperty( access = JsonProperty.Access.READ_ONLY )
 	private String origen;
+
+	@JsonProperty( access = JsonProperty.Access.READ_ONLY )
 	private String destino;
 
 	public ItinerarioDTO( LocalDateTime salida, LocalDateTime llegada, String origen, String destino ) {
