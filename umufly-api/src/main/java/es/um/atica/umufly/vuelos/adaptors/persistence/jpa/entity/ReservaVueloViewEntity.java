@@ -1,13 +1,14 @@
 package es.um.atica.umufly.vuelos.adaptors.persistence.jpa.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -57,8 +58,16 @@ public class ReservaVueloViewEntity {
 	@Column( name = "FECHA_FORMALIZACION", nullable = true )
 	private LocalDateTime fechaFormalizacion;
 
-	@OneToMany( mappedBy = "reservaVuelo", fetch = FetchType.LAZY )
+	@OneToMany( mappedBy = "reservaVuelo", cascade = CascadeType.ALL )
 	private List<ReservaVueloPasajeroViewEntity> pasajeros;
+
+	public void addPasajero( ReservaVueloPasajeroViewEntity pasajero ) {
+		if ( pasajeros == null ) {
+			pasajeros = new ArrayList<>();
+		}
+		pasajeros.add( pasajero );
+		pasajero.setReservaVuelo( this );
+	}
 
 	public String getId() {
 		return id;

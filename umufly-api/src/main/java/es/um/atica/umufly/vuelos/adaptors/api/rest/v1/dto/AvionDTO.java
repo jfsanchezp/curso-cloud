@@ -1,4 +1,4 @@
-package es.um.atica.umufly.vuelos.adaptors.api.rest.dto;
+package es.um.atica.umufly.vuelos.adaptors.api.rest.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

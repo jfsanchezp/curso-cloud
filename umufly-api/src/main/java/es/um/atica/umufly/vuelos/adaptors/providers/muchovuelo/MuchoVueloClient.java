@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.mapper.ApiRestV2Mapper;
 import es.um.atica.umufly.vuelos.adaptors.providers.muchovuelo.dto.ReservaVueloDTO;
 import es.um.atica.umufly.vuelos.adaptors.providers.muchovuelo.dto.TipoDocumentoDTO;
 import es.um.atica.umufly.vuelos.adaptors.providers.muchovuelo.exception.MuchoVueloClientException;
+import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 
 @Component
 public class MuchoVueloClient {
@@ -35,8 +37,8 @@ public class MuchoVueloClient {
 		}
 	}
 
-	public void cancelarReservaVuelo( TipoDocumentoDTO tipoDocumentoTitular, String numeroDocumento, UUID idReserva ) {
-		String headerUsuario = getHeaderUsuario( tipoDocumentoTitular, numeroDocumento );
+	public void cancelarReservaVuelo( DocumentoIdentidad documentoIdentidadTitular, UUID idReserva ) {
+		String headerUsuario = getHeaderUsuario( ApiRestV2Mapper.tipoDocumentoToDTO( documentoIdentidadTitular.tipo() ), documentoIdentidadTitular.identificador() );
 		try {
 			restClientMuchoVuelo.delete().uri( uriBuilder -> uriBuilder.path( URI_RESERVAS_VUELO_V1 + "/{idReserva}" ).build( idReserva ) ).header( API_HEADER_USUARIO, headerUsuario ).retrieve();
 		} catch ( org.springframework.web.client.RestClientResponseException ex ) {
