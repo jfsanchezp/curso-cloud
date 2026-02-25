@@ -67,7 +67,7 @@ public interface ReservasVueloRepository {
 	 * @param idReserva
 	 * @return
 	 */
-	ReservaVuelo findReservaById( UUID idReserva );
+	ReservaVuelo findReservaById( DocumentoIdentidad documentoIdentidad, UUID idReserva );
 
 	/**
 	 * Obtiene todas las reservas.
@@ -75,7 +75,7 @@ public interface ReservasVueloRepository {
 	 * @param idReserva
 	 * @return
 	 */
-	Page<ReservaVuelo> findReservas( int pagina, int tamanioPagina );
+	Page<ReservaVuelo> findReservas( DocumentoIdentidad documentoIdentidad, int pagina, int tamanioPagina );
 
 	/**
 	 * M�todo que cancela una reserva a traves de su id.
