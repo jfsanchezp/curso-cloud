@@ -50,12 +50,12 @@ public class ReservasEndpointV2 {
 
 	@GetMapping( Constants.PRIVATE_PREFIX + Constants.API_VERSION_2 + Constants.RESOURCE_RESERVAS_VUELO )
 	public CollectionModel<ReservaVueloDTO> getReservas( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @RequestParam( name = "page", defaultValue = "0" ) int page, @RequestParam( name = "size", defaultValue = "25" ) int size ) {
-		return pagedResourcesAssembler.toModel( gestionarReservaUseCase.listarReservas( page, size ), reservasModelAssembler );
+		return pagedResourcesAssembler.toModel( gestionarReservaUseCase.listarReservas( authService.parseUserHeader( usuario ), page, size ), reservasModelAssembler );
 	}
 
 	@GetMapping( Constants.PRIVATE_PREFIX + Constants.API_VERSION_2 + Constants.RESOURCE_RESERVAS_VUELO + Constants.ID_RESERVA )
 	public ReservaVueloDTO getReserva( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @PathVariable( "idReserva" ) UUID idReserva ) {
-		return reservasModelAssembler.toModel( gestionarReservaUseCase.obtenerReserva( idReserva ) );
+		return reservasModelAssembler.toModel( gestionarReservaUseCase.obtenerReserva( authService.parseUserHeader( usuario ), idReserva ) );
 	}
 
 }

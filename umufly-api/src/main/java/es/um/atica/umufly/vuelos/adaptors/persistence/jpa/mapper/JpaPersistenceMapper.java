@@ -147,11 +147,11 @@ public class JpaPersistenceMapper {
 		return r;
 	}
 
-	public static ReservaVuelo reservaVueloToModel( ReservaVueloEntity r, VueloExtViewEntity v ) {
+	public static ReservaVuelo reservaVueloToModel( ReservaVueloViewEntity r, VueloExtViewEntity v ) {
 		// TODO: Porque el objeto del modelo no puede ser una lista de pasajeros
 		return ReservaVuelo.of( UUID.fromString( r.getId() ), new DocumentoIdentidad( tipoDocumentoEntityToModel( r.getTipoDocumentoTitular() ), r.getNumeroDocumentoTitular() ),
 				r.getPasajeros() == null || r.getPasajeros().isEmpty() ? null : pasajeroToModel( r.getPasajeros().get( 0 ) ), v != null ? vueloToModel( v ) : null, claseAsientoReservaEntityToModel( r.getClaseAsientoReserva() ), r.getFechaCreacion(),
-				estadoReservaEntityToModel( r.getEstadoReserva() ) );
+						estadoReservaEntityToModel( r.getEstadoReserva() ) );
 	}
 
 	private static ReservaVueloPasajeroEntity pasajeroToEntity( Pasajero pp ) {
@@ -180,7 +180,7 @@ public class JpaPersistenceMapper {
 		return p;
 	}
 
-	public static Pasajero pasajeroToModel( ReservaVueloPasajeroEntity p ) {
+	public static Pasajero pasajeroToModel( ReservaVueloPasajeroViewEntity p ) {
 		return Pasajero.of( new DocumentoIdentidad( tipoDocumentoEntityToModel( p.getTipoDocumento() ), p.getNumeroDocumento() ), new NombreCompleto( p.getNombre(), p.getPrimerApellido(), p.getSegundoApellido() ), new CorreoElectronico( p.getEmail() ),
 				new Nacionalidad( p.getNacionalidad() ) );
 	}

@@ -55,26 +55,27 @@ public class GestionarReservaUseCase {
 
 	public ReservaVuelo cancelarReserva( DocumentoIdentidad documentoIdentidadTitular, UUID idReserva ) {
 		// 1. Recuperamos la reserva
-		ReservaVuelo reservaVuelo = reservasVueloRepository.findReservaById( idReserva );
+		ReservaVuelo reservaVuelo = reservasVueloRepository.findReservaById( documentoIdentidadTitular, idReserva );
 
 		// 2. Cancelamos la reserva en el fronOffice
 		reservaVuelo.cancelarReserva( LocalDateTime.now( clock ) );
 		reservasVueloRepository.cancelReserva( reservaVuelo.getId() );
 
 		// 3. Cancelamos la reserva llamando al backoffice para que se haga eco de la cancelacion
-		formalizacionReservasVueloPort.cancelarReservaVuelo( documentoIdentidadTitular, idReserva );
+		UUID idReservaFormalizada = reservasVueloRepository.findIdFormalizadaByReservaById( idReserva );
+		formalizacionReservasVueloPort.cancelarReservaVuelo( documentoIdentidadTitular, idReservaFormalizada );
 
 
 		return reservaVuelo;
 	}
 
-	public Page<ReservaVuelo> listarReservas( int pagina, int tamanioPagina ) {
-		return reservasVueloRepository.findReservas( pagina, tamanioPagina );
+	public Page<ReservaVuelo> listarReservas( DocumentoIdentidad documentoIdentidad, int pagina, int tamanioPagina ) {
+		return reservasVueloRepository.findReservas( documentoIdentidad, pagina, tamanioPagina );
 
 	}
 
-	public ReservaVuelo obtenerReserva( UUID idReserva ) {
-		return reservasVueloRepository.findReservaById( idReserva );
+	public ReservaVuelo obtenerReserva( DocumentoIdentidad documentoIdentidad, UUID idReserva ) {
+		return reservasVueloRepository.findReservaById( documentoIdentidad, idReserva );
 	}
 
 }

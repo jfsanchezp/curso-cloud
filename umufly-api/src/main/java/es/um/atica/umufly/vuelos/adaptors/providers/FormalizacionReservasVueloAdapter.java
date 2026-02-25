@@ -28,7 +28,7 @@ public class FormalizacionReservasVueloAdapter implements FormalizacionReservasV
 
 	@Override
 	public void cancelarReservaVuelo( DocumentoIdentidad documentoIdentidadTitular, UUID idReserva ) {
-		muchoVueloClient.cancelarReservaVuelo( documentoIdentidadTitular, idReserva );
+		muchoVueloClient.cancelarReservaVuelo( MuchoVueloMapper.tipoDocumentoToDTO( documentoIdentidadTitular.tipo() ), documentoIdentidadTitular.identificador(), idReserva );
 	}
 
 }
