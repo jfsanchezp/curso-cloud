@@ -32,6 +32,14 @@ public final class MuchoVueloMapper {
 		return dto;
 	}
 
+	public static TipoDocumentoDTO tipoDocumentoToDTO( TipoDocumento tipo ) {
+		return switch ( tipo ) {
+			case NIF -> TipoDocumentoDTO.NIF;
+			case NIE -> TipoDocumentoDTO.NIE;
+			case PASAPORTE -> TipoDocumentoDTO.PASAPORTE;
+		};
+	}
+
 	private static PasajeroDTO pasajeroToDTO( Pasajero pasajero ) {
 
 		PasajeroDTO dto = new PasajeroDTO();
@@ -47,14 +55,6 @@ public final class MuchoVueloMapper {
 		dto.setNacionalidad( pasajero.getNacionalidad().valor() );
 
 		return dto;
-	}
-
-	private static TipoDocumentoDTO tipoDocumentoToDTO( TipoDocumento tipo ) {
-		return switch ( tipo ) {
-			case NIF -> TipoDocumentoDTO.NIF;
-			case NIE -> TipoDocumentoDTO.NIE;
-			case PASAPORTE -> TipoDocumentoDTO.PASAPORTE;
-		};
 	}
 
 	private static ClaseAsiento claseAsientoToDTO( ClaseAsientoReserva clase ) {

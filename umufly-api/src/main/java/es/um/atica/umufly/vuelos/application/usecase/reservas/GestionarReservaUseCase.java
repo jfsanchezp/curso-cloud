@@ -62,7 +62,8 @@ public class GestionarReservaUseCase {
 		reservasVueloRepository.cancelReserva( reservaVuelo.getId() );
 
 		// 3. Cancelamos la reserva llamando al backoffice para que se haga eco de la cancelacion
-		formalizacionReservasVueloPort.cancelarReservaVuelo( documentoIdentidadTitular, idReserva );
+		UUID idReservaFormalizada = reservasVueloRepository.findIdFormalizadaByReservaById( idReserva );
+		formalizacionReservasVueloPort.cancelarReservaVuelo( documentoIdentidadTitular, idReservaFormalizada );
 
 
 		return reservaVuelo;

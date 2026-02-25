@@ -74,7 +74,7 @@ public class ApiRestV2Mapper {
 
 	public static TipoDocumentoDTO tipoDocumentoToDTO( TipoDocumento tipoDocumento ) {
 		return switch ( tipoDocumento ) {
-			case NIF -> TipoDocumentoDTO.NIE;
+			case NIF -> TipoDocumentoDTO.NIF;
 			case NIE -> TipoDocumentoDTO.NIE;
 			case PASAPORTE -> TipoDocumentoDTO.PASAPORTE;
 			default -> throw new IllegalArgumentException( "Unexpected value: " + tipoDocumento );

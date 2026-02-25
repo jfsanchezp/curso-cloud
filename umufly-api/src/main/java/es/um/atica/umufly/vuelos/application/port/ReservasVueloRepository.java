@@ -85,4 +85,6 @@ public interface ReservasVueloRepository {
 	 */
 	void cancelReserva( UUID idReserva );
 
+	UUID findIdFormalizadaByReservaById( UUID reservaId );
+
 }
