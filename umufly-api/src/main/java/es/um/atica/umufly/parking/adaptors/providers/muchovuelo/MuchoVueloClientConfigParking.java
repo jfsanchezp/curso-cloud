@@ -17,7 +17,7 @@ public class MuchoVueloClientConfigParking {
 	private String basePath;
 
 	@Bean
-	public RestTemplate muchoVueloRestTemplate( RestTemplateBuilder builder ) {
+	public RestTemplate muchoVueloRestTemplateParking( RestTemplateBuilder builder ) {
 		// Construimos la URL completa de forma segura
 		String rootUri = UriComponentsBuilder.fromUriString( baseUrl ).path( basePath ).build().toUriString();
 
