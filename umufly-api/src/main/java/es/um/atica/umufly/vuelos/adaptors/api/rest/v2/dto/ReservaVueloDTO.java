@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -13,8 +16,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import es.um.atica.umufly.vuelos.adaptors.api.rest.Constants;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 
 @Relation( collectionRelation = "reservasVuelo", itemRelation = "reservaVuelo" )
 @JsonInclude( content = Include.NON_NULL )

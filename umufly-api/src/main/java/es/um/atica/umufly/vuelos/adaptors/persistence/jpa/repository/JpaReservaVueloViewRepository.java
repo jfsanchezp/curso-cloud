@@ -28,6 +28,7 @@ public interface JpaReservaVueloViewRepository extends JpaRepository<ReservaVuel
 
 	ReservaVueloViewEntity findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoAndIdVueloAndEstadoReservaIn( TipoDocumentoEnum tipoDocumento, String numeroDocumento, String idsVuelo, List<EstadoReservaVueloEnum> estados );
 
+
 	@Query( """
 			SELECT rv
 			FROM ReservaVueloViewEntity rv

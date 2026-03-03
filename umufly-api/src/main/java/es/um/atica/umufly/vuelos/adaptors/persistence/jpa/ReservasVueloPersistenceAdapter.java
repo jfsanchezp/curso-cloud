@@ -20,13 +20,14 @@ import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.mapper.JpaPersistenceM
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.repository.JpaReservaVueloRepository;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.repository.JpaReservaVueloViewRepository;
 import es.um.atica.umufly.vuelos.adaptors.persistence.jpa.repository.JpaVueloRepository;
-import es.um.atica.umufly.vuelos.application.port.ReservasVueloRepository;
+import es.um.atica.umufly.vuelos.application.port.ReservasVueloReadRepository;
+import es.um.atica.umufly.vuelos.application.port.ReservasVueloWriteRepository;
 import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.domain.model.Pasajero;
 import es.um.atica.umufly.vuelos.domain.model.ReservaVuelo;
 
 @Component
-public class ReservasVueloPersistenceAdapter implements ReservasVueloRepository {
+public class ReservasVueloPersistenceAdapter implements ReservasVueloReadRepository, ReservasVueloWriteRepository {
 
 	private final JpaReservaVueloRepository jpaReservaVueloRepository;
 	private final JpaReservaVueloViewRepository jpaReservaVueloViewRepository;
@@ -86,14 +87,14 @@ public class ReservasVueloPersistenceAdapter implements ReservasVueloRepository 
 	public ReservaVuelo findReservaById( DocumentoIdentidad documentoIdentidad, UUID idReserva ) {
 		return jpaReservaVueloViewRepository
 				.findByIdAndPasajerosTipoDocumentoAndPasajerosNumeroDocumentoOrTipoDocumentoTitularAndNumeroDocumentoTitular( idReserva.toString(), JpaPersistenceMapper.tipoDocumentoToEntity( documentoIdentidad.tipo() ), documentoIdentidad.identificador() )
-				.map( r -> JpaPersistenceMapper.reservaVueloToModel( r, jpaVueloRepository.findById( r.getIdVuelo() ).orElseGet( null ) ) ).orElseThrow( () -> new IllegalStateException( "Reserva no encontrado" ) );
+				.map( r -> JpaPersistenceMapper.reservaVueloToModel( r, jpaVueloRepository.findById( r.getIdVuelo() ).orElseGet( null ) ) )
+				.orElseThrow( () -> new IllegalStateException( "Reserva no encontrado" ) );
 	}
 
 	@Override
 	public Page<ReservaVuelo> findReservas( DocumentoIdentidad documentoIdentidad, int pagina, int tamanioPagina ) {
-		return jpaReservaVueloViewRepository
-				.findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoOrTipoDocumentoTitularAndNumeroDocumentoTitular( JpaPersistenceMapper.tipoDocumentoToEntity( documentoIdentidad.tipo() ), documentoIdentidad.identificador(),
-						PageRequest.of( pagina, tamanioPagina ) )
+		return jpaReservaVueloViewRepository.findByPasajerosTipoDocumentoAndPasajerosNumeroDocumentoOrTipoDocumentoTitularAndNumeroDocumentoTitular( JpaPersistenceMapper.tipoDocumentoToEntity( documentoIdentidad.tipo() ), documentoIdentidad.identificador(),
+				PageRequest.of( pagina, tamanioPagina ) )
 				.map( r -> JpaPersistenceMapper.reservaVueloToModel( r, jpaVueloRepository.findById( r.getIdVuelo() ).orElseGet( null ) ) );
 	}
 
@@ -105,10 +106,10 @@ public class ReservasVueloPersistenceAdapter implements ReservasVueloRepository 
 		entidad.setFechaModificacion( fechaActual );
 		jpaReservaVueloRepository.save( entidad );
 	}
-
+	
 	@Override
-	public UUID findIdFormalizadaByReservaById( UUID reservaId ) {
-		return UUID.fromString( jpaReservaVueloRepository.findById( reservaId.toString() ).orElseThrow( () -> new IllegalStateException( "Reserva de vuelo no encontrada" ) ).getIdReservaFormalizada() );
+	public UUID findIdFormalizadaByReservaById(UUID reservaId) {
+		return UUID.fromString(jpaReservaVueloRepository.findById(reservaId.toString()).orElseThrow(() -> new IllegalStateException( "Reserva de vuelo no encontrada" )).getIdReservaFormalizada());
 	}
 
 }

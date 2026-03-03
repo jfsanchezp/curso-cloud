@@ -121,6 +121,7 @@ public class ReservaVuelo {
 	 * Método que formaliza una reserva de vuelo. Añadirá la fecha en la que se ha formalizado la reserva de vuelo y
 	 * cambiará el estado a ACTIVA.
 	 *
+	 * @param fechaReserva
 	 */
 	public void formalizarReserva() {
 		estado = EstadoReserva.ACTIVA;
@@ -134,6 +135,7 @@ public class ReservaVuelo {
 	 * <li>No se puede cancelar una reserva si el vuelo ha sido iniciado.</li>
 	 * </ol>
 	 *
+	 * @param fechaHoraActual
 	 */
 	public void cancelarReserva( LocalDateTime now ) {
 		if ( now.isAfter( vuelo.getItinerario().salida() ) ) {

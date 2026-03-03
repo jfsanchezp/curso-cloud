@@ -32,6 +32,19 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+	<repositories>
+		<repository>
+			<id>fundewebjs.archiva.atica.umu.es</id>
+			<name>ATICA - UMU Repository - FundeWebJS</name>
+			<url>https://archiva.um.es/archiva/repository/FundeWebJS/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<dependencies>
 
 		<!-- Inicio: Servicios web -->
@@ -82,6 +95,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<!-- UMUBUS local (CQRS + eventos locales) -->
+		<dependency>
+			<groupId>es.um.atica.fundewebjs</groupId>
+			<artifactId>fundewebjs-umubus</artifactId>
+			<version>1.0.15-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>

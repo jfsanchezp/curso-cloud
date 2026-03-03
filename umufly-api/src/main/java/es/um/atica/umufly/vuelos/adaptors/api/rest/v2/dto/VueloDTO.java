@@ -3,12 +3,12 @@ package es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto;
 import java.util.Objects;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jakarta.validation.constraints.NotNull;
 
 @Relation( collectionRelation = "vuelos", itemRelation = "vuelo" )
 public class VueloDTO extends RepresentationModel<VueloDTO> {
