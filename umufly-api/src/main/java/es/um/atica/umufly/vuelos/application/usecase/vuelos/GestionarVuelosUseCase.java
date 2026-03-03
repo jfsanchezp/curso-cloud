@@ -7,20 +7,20 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import es.um.atica.umufly.shared.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.application.dto.VueloAmpliadoDTO;
 import es.um.atica.umufly.vuelos.application.mapper.ApplicationMapper;
-import es.um.atica.umufly.vuelos.application.port.ReservasVueloRepository;
-import es.um.atica.umufly.vuelos.application.port.VuelosRepository;
-import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
+import es.um.atica.umufly.vuelos.application.port.ReservasVueloReadRepository;
+import es.um.atica.umufly.vuelos.application.port.VuelosReadRepository;
 import es.um.atica.umufly.vuelos.domain.model.Vuelo;
 
 @Component
 public class GestionarVuelosUseCase {
 
-	private final VuelosRepository vuelosRepository;
-	private final ReservasVueloRepository reservasVueloRepository;
+	private final VuelosReadRepository vuelosRepository;
+	private final ReservasVueloReadRepository reservasVueloRepository;
 
-	public GestionarVuelosUseCase( VuelosRepository vuelosRepository, ReservasVueloRepository reservasVueloRepository ) {
+	public GestionarVuelosUseCase( VuelosReadRepository vuelosRepository, ReservasVueloReadRepository reservasVueloRepository ) {
 		this.vuelosRepository = vuelosRepository;
 		this.reservasVueloRepository = reservasVueloRepository;
 	}

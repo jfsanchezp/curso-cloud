@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.um.atica.umufly.shared.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.AuthService;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.Constants;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.VueloDTO;
 import es.um.atica.umufly.vuelos.application.dto.VueloAmpliadoDTO;
 import es.um.atica.umufly.vuelos.application.usecase.vuelos.GestionarVuelosUseCase;
-import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 
 @RestController
 public class VuelosEndpointV2 {

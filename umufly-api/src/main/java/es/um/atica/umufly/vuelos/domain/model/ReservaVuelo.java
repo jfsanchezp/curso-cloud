@@ -3,6 +3,7 @@ package es.um.atica.umufly.vuelos.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import es.um.atica.umufly.shared.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.domain.exception.LimiteReservasPorPasajeroEnVueloSuperadoException;
 import es.um.atica.umufly.vuelos.domain.exception.VueloIniciadoException;
 import es.um.atica.umufly.vuelos.domain.exception.VueloNoReservableException;

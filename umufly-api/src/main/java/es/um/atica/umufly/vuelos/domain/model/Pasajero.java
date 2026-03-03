@@ -1,5 +1,9 @@
 package es.um.atica.umufly.vuelos.domain.model;
 
+import es.um.atica.umufly.shared.domain.model.CorreoElectronico;
+import es.um.atica.umufly.shared.domain.model.DocumentoIdentidad;
+import es.um.atica.umufly.shared.domain.model.NombreCompleto;
+
 public class Pasajero {
 
 	private DocumentoIdentidad identificador;

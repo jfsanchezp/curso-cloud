@@ -4,15 +4,15 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import es.um.atica.umufly.shared.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.adaptors.providers.muchovuelo.MuchoVueloClient;
 import es.um.atica.umufly.vuelos.adaptors.providers.muchovuelo.dto.ReservaVueloDTO;
 import es.um.atica.umufly.vuelos.adaptors.providers.muchovuelo.mapper.MuchoVueloMapper;
-import es.um.atica.umufly.vuelos.application.port.FormalizacionReservasVueloPort;
-import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
+import es.um.atica.umufly.vuelos.application.port.ReservasVueloWritePort;
 import es.um.atica.umufly.vuelos.domain.model.ReservaVuelo;
 
 @Component
-public class FormalizacionReservasVueloAdapter implements FormalizacionReservasVueloPort {
+public class FormalizacionReservasVueloAdapter implements ReservasVueloWritePort {
 
 	private final MuchoVueloClient muchoVueloClient;
 

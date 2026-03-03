@@ -2,7 +2,7 @@ package es.um.atica.umufly.vuelos.adaptors.api.rest;
 
 import org.springframework.stereotype.Component;
 
-import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
+import es.um.atica.umufly.shared.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.domain.model.TipoDocumento;
 
 @Component

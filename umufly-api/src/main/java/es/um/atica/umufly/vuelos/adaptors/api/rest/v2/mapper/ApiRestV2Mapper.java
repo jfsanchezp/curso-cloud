@@ -1,5 +1,8 @@
 package es.um.atica.umufly.vuelos.adaptors.api.rest.v2.mapper;
 
+import es.um.atica.umufly.shared.domain.model.CorreoElectronico;
+import es.um.atica.umufly.shared.domain.model.DocumentoIdentidad;
+import es.um.atica.umufly.shared.domain.model.NombreCompleto;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.AvionDTO;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.ClaseAsientoReserva;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.DocumentoIdentidadDTO;
@@ -12,10 +15,7 @@ import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.TipoVuelo;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.VueloDTO;
 import es.um.atica.umufly.vuelos.adaptors.providers.muchovuelo.dto.TipoDocumentoDTO;
 import es.um.atica.umufly.vuelos.application.dto.VueloAmpliadoDTO;
-import es.um.atica.umufly.vuelos.domain.model.CorreoElectronico;
-import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 import es.um.atica.umufly.vuelos.domain.model.Nacionalidad;
-import es.um.atica.umufly.vuelos.domain.model.NombreCompleto;
 import es.um.atica.umufly.vuelos.domain.model.Pasajero;
 import es.um.atica.umufly.vuelos.domain.model.ReservaVuelo;
 import es.um.atica.umufly.vuelos.domain.model.TipoDocumento;
