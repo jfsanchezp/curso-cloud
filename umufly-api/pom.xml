@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.2</version>
+		<version>2.7.18</version>
 		<relativePath/>
 		<!-- lookup parent from repository -->
 	</parent>
@@ -32,10 +32,11 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+	
 	<repositories>
 		<repository>
 			<id>fundewebjs.archiva.atica.umu.es</id>
-			<name>ATICA - UMU Repository - FundeWebJS</name>
+			<name>ATICA -UMU Repository -FundeWebJS</name>
 			<url>https://archiva.um.es/archiva/repository/FundeWebJS/</url>
 			<releases>
 				<enabled>true</enabled>
@@ -45,6 +46,7 @@
 			</snapshots>
 		</repository>
 	</repositories>
+	
 	<dependencies>
 
 		<!-- Inicio: Servicios web -->
@@ -61,8 +63,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
-			<artifactId>ojdbc11</artifactId>
-			<scope>runtime</scope>
+			<artifactId>ojdbc8</artifactId>
+<!--			<scope>runtime</scope>-->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -86,22 +88,22 @@
 		</dependency>
 		<!-- Fin: Devtools (restart / hot reload en desarrollo) -->
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-restclient</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-restclient</artifactId>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- UMUBUS local (CQRS + eventos locales) -->
+		<!--UMUBUS local (CQRS + eventos locales) -->
 		<dependency>
 			<groupId>es.um.atica.fundewebjs</groupId>
 			<artifactId>fundewebjs-umubus</artifactId>
 			<version>1.0.15-SNAPSHOT</version>
-		</dependency>
+		</dependency>		
 	</dependencies>
 	<build>
 		<plugins>
