@@ -3,13 +3,21 @@ package es.um.atica.umufly.vuelos.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import es.um.atica.fundewebjs.umubus.domain.model.AggregateRoot;
+import es.um.atica.umufly.vuelos.domain.event.CalculaImporteParkingEvent;
+import es.um.atica.umufly.vuelos.domain.event.CancelarReservaVueloEvent;
+import es.um.atica.umufly.vuelos.domain.event.CancelarReservaVueloKOEvent;
+import es.um.atica.umufly.vuelos.domain.event.CancelarReservaVueloOKEvent;
+import es.um.atica.umufly.vuelos.domain.event.CrearReservaVueloEvent;
+import es.um.atica.umufly.vuelos.domain.event.CrearReservaVueloKOEvent;
+import es.um.atica.umufly.vuelos.domain.event.CrearReservaVueloOKEvent;
 import es.um.atica.umufly.vuelos.domain.exception.LimiteReservasPorPasajeroEnVueloSuperadoException;
 import es.um.atica.umufly.vuelos.domain.exception.VueloIniciadoException;
 import es.um.atica.umufly.vuelos.domain.exception.VueloNoReservableException;
 import es.um.atica.umufly.vuelos.domain.exception.VueloSinPlazasException;
 
 // Agregado raíz
-public class ReservaVuelo {
+public class ReservaVuelo extends AggregateRoot {
 
 	private static final int MAX_RESERVAS_POR_PASAJERO_EN_VUELO = 1;
 
@@ -116,6 +124,10 @@ public class ReservaVuelo {
 		}
 		return of( UUID.randomUUID(), identificadorTitular, pasajero, vuelo, clase, fechaReserva, EstadoReserva.PENDIENTE );
 	}
+	
+	public void crearReserva() {
+		this.addEvent(CrearReservaVueloEvent.of(this.id, this.identificadorTitular, this.pasajero, this.vuelo, this.clase, this.estado, this.fechaReserva));
+	}
 
 	/**
 	 * Método que formaliza una reserva de vuelo. Añadirá la fecha en la que se ha formalizado la reserva de vuelo y
@@ -137,11 +149,32 @@ public class ReservaVuelo {
 	 *
 	 * @param fechaHoraActual
 	 */
-	public void cancelarReserva( LocalDateTime now ) {
+	public void cancelarReserva(UUID idReservaFormalizada, LocalDateTime now ) {
 		if ( now.isAfter( vuelo.getItinerario().salida() ) ) {
-			throw new VueloIniciadoException( "El vuelo se encuentra iniciado no se puede cancelar la reserva" );
+//			throw new VueloIniciadoException( "El vuelo se encuentra iniciado no se puede cancelar la reserva" );
+			cancelarReservaKO("El vuelo se encuentra iniciado no se puede cancelar la reserva");
 		}
 		estado = EstadoReserva.CANCELADA;
+		this.addEvent(CancelarReservaVueloEvent.of(this.id, idReservaFormalizada, this.identificadorTitular));
 	}
-
+	
+	public void crearReservaOK(UUID idReservaFormalizada) {
+		this.addEvent(CrearReservaVueloOKEvent.of(id, identificadorTitular, idReservaFormalizada));
+	}
+	
+	public void crearReservaKO(String mensajeError) {
+		this.addEvent(CrearReservaVueloKOEvent.of(id, mensajeError));
+	}
+	
+	public void cancelarReservaOK() {
+		this.addEvent(CancelarReservaVueloOKEvent.of(id));
+	}
+	
+	public void cancelarReservaKO(String mensajeError) {
+		this.addEvent(CancelarReservaVueloKOEvent.of(id, mensajeError));
+	}
+	
+	public void tieneClienteReserva(UUID idParking, boolean tieneReserva) {
+		this.addEvent(CalculaImporteParkingEvent.of(idParking, tieneReserva));
+	}
 }

@@ -30,4 +30,7 @@ public interface ReservasVueloWriteRepository {
 	 */
 	void cancelReserva( UUID idReserva );
 
+
+	void errorReserva(UUID id, String mensajeError);
+
 }

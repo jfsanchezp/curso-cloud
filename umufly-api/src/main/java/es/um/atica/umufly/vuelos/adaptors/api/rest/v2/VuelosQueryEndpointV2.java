@@ -10,29 +10,26 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.um.atica.fundewebjs.umubus.domain.cqrs.QueryBus;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.AuthService;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.Constants;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.VueloDTO;
 import es.um.atica.umufly.vuelos.application.dto.VueloAmpliadoDTO;
 import es.um.atica.umufly.vuelos.application.usecase.listarvuelos.ListaVuelosQuery;
-import es.um.atica.umufly.vuelos.application.usecase.listarvuelos.ListaVuelosQueryHandler;
 import es.um.atica.umufly.vuelos.application.usecase.obtenervuelos.ObtenerVueloQuery;
-import es.um.atica.umufly.vuelos.application.usecase.obtenervuelos.ObtenerVueloQueryHandler;
 import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 
 @RestController
 public class VuelosQueryEndpointV2 {
 
-	private final ObtenerVueloQueryHandler obtenerVueloQueryHandler;
-	private final ListaVuelosQueryHandler listaVuelosQueryHandler;
+	private final QueryBus queryBus;
 	private final VuelosModelAssemblerV2 vuelosModelAssemblerV2;
 	private final PagedResourcesAssembler<VueloAmpliadoDTO> pagedResourcesAssembler;
 	private final AuthService authService;
 
-	public VuelosQueryEndpointV2( ObtenerVueloQueryHandler obtenerVueloQueryHandler, ListaVuelosQueryHandler listaVuelosQueryHandler, VuelosModelAssemblerV2 vuelosModelAssemblerV2, PagedResourcesAssembler<VueloAmpliadoDTO> pagedResourcesAssembler,
+	public VuelosQueryEndpointV2( QueryBus queryBus, VuelosModelAssemblerV2 vuelosModelAssemblerV2, PagedResourcesAssembler<VueloAmpliadoDTO> pagedResourcesAssembler,
 			AuthService authService ) {
-		this.obtenerVueloQueryHandler = obtenerVueloQueryHandler;
-		this.listaVuelosQueryHandler = listaVuelosQueryHandler;
+		this.queryBus = queryBus;
 		this.vuelosModelAssemblerV2 = vuelosModelAssemblerV2;
 		this.pagedResourcesAssembler = pagedResourcesAssembler;
 		this.authService = authService;
@@ -42,12 +39,12 @@ public class VuelosQueryEndpointV2 {
 	public CollectionModel<VueloDTO> getVuelos( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @RequestParam( name = "page", defaultValue = "0" ) int page, @RequestParam( name = "size", defaultValue = "25" ) int size )
 			throws Exception {
 		DocumentoIdentidad documento = authService.parseUserHeader( usuario );
-		return pagedResourcesAssembler.toModel( listaVuelosQueryHandler.handle( ListaVuelosQuery.of( documento, page, size ) ), vuelosModelAssemblerV2 );
+		return pagedResourcesAssembler.toModel( queryBus.handle( ListaVuelosQuery.of( documento, page, size ) ), vuelosModelAssemblerV2 );
 	}
 
 	@GetMapping( Constants.PRIVATE_PREFIX + Constants.API_VERSION_2 + Constants.RESOURCE_VUELOS + Constants.ID_VUELOS )
 	public VueloDTO getVuelo( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @PathVariable( "idVuelo" ) UUID idVuelo ) throws Exception {
-		return vuelosModelAssemblerV2.toModel( obtenerVueloQueryHandler.handle( ObtenerVueloQuery.of( authService.parseUserHeader( usuario ), idVuelo ) ) );
+		return vuelosModelAssemblerV2.toModel( queryBus.handle( ObtenerVueloQuery.of( authService.parseUserHeader( usuario ), idVuelo ) ) );
 	}
 
 }

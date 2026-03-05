@@ -106,10 +106,16 @@ public class ReservasVueloPersistenceAdapter implements ReservasVueloReadReposit
 		entidad.setFechaModificacion( fechaActual );
 		jpaReservaVueloRepository.save( entidad );
 	}
-	
+
 	@Override
 	public UUID findIdFormalizadaByReservaById(UUID reservaId) {
 		return UUID.fromString(jpaReservaVueloRepository.findById(reservaId.toString()).orElseThrow(() -> new IllegalStateException( "Reserva de vuelo no encontrada" )).getIdReservaFormalizada());
 	}
 
+	@Override
+	public void errorReserva( UUID id, String mensajeError ) {
+		ReservaVueloEntity entidad = jpaReservaVueloRepository.findById( id.toString() ).orElseThrow( () -> new IllegalStateException( "Reserva de vuelo no encontrada" ) );
+		entidad.setErrores( mensajeError );
+		jpaReservaVueloRepository.save( entidad );
+	}
 }

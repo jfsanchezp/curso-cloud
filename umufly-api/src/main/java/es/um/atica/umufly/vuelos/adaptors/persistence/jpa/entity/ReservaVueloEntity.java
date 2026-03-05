@@ -61,6 +61,9 @@ public class ReservaVueloEntity {
 	@Column( name = "ID_RESERVA_FORMALIZADA", length = 36, nullable = true )
 	private String idReservaFormalizada;
 
+	@Column( name = "ERRORES", length = 1000, nullable = true )
+	private String errores;
+
 	@OneToMany( mappedBy = "reservaVuelo", cascade = CascadeType.ALL )
 	private List<ReservaVueloPasajeroEntity> pasajeros;
 
@@ -160,5 +163,11 @@ public class ReservaVueloEntity {
 		this.pasajeros = pasajeros;
 	}
 
+	public String getErrores() {
+		return errores;
+	}
 
+	public void setErrores(String errores) {
+		this.errores = errores;
+	}
 }
